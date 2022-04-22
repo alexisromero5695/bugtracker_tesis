@@ -1,0 +1,24 @@
+/*!
+ * Theme Name: Default
+ * Package : DashLite
+ * Author: Softnio
+ * Author URI: http://themeforest.net/user/softnio
+ * Version	 :	1.0.0
+ * Updated	 :	07.23.2020
+**/
+
+.btn-close-modal {
+    padding: 0.2rem !important;
+    top: 0.5rem;
+    right: 0.3rem;
+    position: relative;
+    font-weight: inherit;
+    border-radius: 100%;
+    color: black;
+    opacity: 1;
+}
+
+.btn-close-modal:hover {
+    background: #e5e9f2;
+    font-weight: inherit;
+}
