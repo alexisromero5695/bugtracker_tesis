@@ -9,9 +9,9 @@ class Avatar extends Model
 {
     use HasFactory;
     protected $table = 'avatar';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_avatar';
     protected $fillable = [
-        'path',
+        'imagen_avatar',
     ];
     public $timestamps = false;
 }

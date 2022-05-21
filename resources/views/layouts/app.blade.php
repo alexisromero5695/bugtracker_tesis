@@ -18,9 +18,13 @@
     <!-- DevExtreme themes -->
     <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.18/css/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.18/css/dx.light.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <link rel="stylesheet" href="{{asset('libs/ionicons/2.0.1/css/ionicons.min.css')}}">
     <!-- DevExtreme library -->
     <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.2.18/js/dx.all.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 @if(strpos(URL::current(), 'login') || strpos(URL::current(), 'register') || strpos(URL::current(), 'login') || strpos(URL::current(), 'reset'))

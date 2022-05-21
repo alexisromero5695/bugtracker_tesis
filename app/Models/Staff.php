@@ -4,50 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class Staff extends Model
 {
-    
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'email',      
-        'color_id',
-        'username',
-        'first_name',
-        'last_name',      
-        'workstation', //puesto de trabajo
-        'department', //departamento
-        'company', //organizacion
-        'location', //ubicacion
-        'current',
-    ];
+    use HasFactory;
+    protected $table = "staff";
     public $timestamps = false;
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [      
-        'remember_token',
+    protected $fillable = [        
+        'id_color',
+        'nombre_staff',
+        'apellido_materno_staff',
+        'apellido_paterno_staff',
+        'puesto',
+        'departamento',
+        'empresa',
+        'direccion_staff',
+        'vigente_staff'
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $primaryKey = 'id_staff';
+    protected $appends = ['nombre_completo'];
+    public function getNombreCompletoAttribute()
+    {
+        return $this->nombre_staff . ' ' . $this->apellido_paterno_staff;
+    }
 }

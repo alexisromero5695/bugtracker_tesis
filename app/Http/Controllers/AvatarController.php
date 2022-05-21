@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AvatarController extends Controller
 {
-    public function UploadAvatar(Request $request)
+    public function subirAvatar(Request $request)
     {
 
         if (isset($request->image)) {
@@ -19,16 +19,16 @@ class AvatarController extends Controller
             $image_name = 'files/avatar/' . $path . '.png';
             file_put_contents($image_name, $data);
             $avatar =  Avatar::create([
-                'path' => $path . '.png',
+                'imagen_avatar' => $path . '.png',
             ]);
             return response()->json([
-                'id' => $avatar['id'],
-                'path' => $image_name,
+                'id_avatar' => $avatar['id_avatar'],
+                'imagen_avatar' => $image_name,
             ]);
         }
     }
 
-    public function GetAvatars(Request $request)
+    public function listarAvatar(Request $request)
     {
         return response()->json(Avatar::all());
     }

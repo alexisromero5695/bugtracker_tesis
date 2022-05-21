@@ -23,13 +23,13 @@
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="{{ route('projects') }}" class="nk-menu-link">
+                        <a href="{{ route('proyectos') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
                             <span class="nk-menu-text">Proyectos</span>
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="{{ route('issues') }}" class="nk-menu-link">
+                        <a href="{{ route('incidencias') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
                             <span class="nk-menu-text">Incidencias</span>
                         </a>

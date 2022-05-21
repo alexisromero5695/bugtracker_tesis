@@ -16,44 +16,36 @@
                     <h4 class="nk-block-title">Iniciar Sesión</h4>
                 </div>
             </div>
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" id="form-iniciar-sesion">
                 @csrf
                 <div class="form-group">
                     <div class="form-label-group">
                         <label class="form-label" for="default-01">Correo electrónico</label>
                     </div>
                     <div class="form-control-wrap">
-                        <input id="email" type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input id="email" type="email" class="form-control form-control-lg " name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                     </div>
-                    @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
+
                 </div>
 
                 <div class="form-group">
                     <div class="form-label-group">
-                        <label for="password" class="form-label">Contraseña</label>
+                        <label for="contrasenia" class="form-label">Contraseña</label>
                     </div>
                     <div class="form-control-wrap">
                         <a href="#" class="form-icon form-icon-right passcode-switch lg" data-target="password">
                             <em class="passcode-icon icon-show icon ni ni-eye"></em>
                             <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
                         </a>
-                        <input id="password" type="password" class="form-control form-control-lg  @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <input id="password" type="password" name="contrasenia" class="form-control form-control-lg"  required autocomplete="current-password">
+
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">
-                        {{ __('Login') }}
+                    <button type="button" id="btn-iniciar-sesion" class="btn btn-lg btn-primary btn-block">
+                        Iniciar Sesion
                     </button>
-                    @if (Route::has('password.request'))
+
                     <div class="d-flex justify-content-between align-items-center">
                         <a class="btn btn-link link link-primary link-sm" href="{{ route('password.request') }}">
                             ¿Has olvidado tu contraseña?
@@ -63,7 +55,7 @@
                             <label class="form-check-label" for="remember">Recordar contraseña</label>
                         </div>
                     </div>
-                    @endif
+
                     <hr>
                     <a href="{{ route('register') }}" type="button" class="btn btn-lg btn-success btn-block">
                         Crear cuenta nueva
@@ -78,6 +70,96 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
+    });
+    $(document).ready(function() {
+        localStorage.setItem("inicio_sesion", 0);
+        $(".autocomplete-off").prop('readonly', true);
+        var validarInicioSesion = $('#form-iniciar-sesion').validate({
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            focusInvalid: false,
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                },
+                contrasenia: {
+                    required: true,
+                },
+            },
+            messages: {
+                email: {
+                    required: 'Ingrese correo electronico.',
+                    email: 'Ingrese un correo válido.',
+                },
+                contrasenia: {
+                    required: "Ingrese contraseña",
+                },
+            },
+            ignore: "",
+            errorElement: "span",
+            errorClass: 'is-invalid',
+            highlight: function(element, errorClass) {
+                $(element).addClass(errorClass);
+            },
+            unhighlight: function(element, errorClass) {
+                $(element).removeClass(errorClass);
+            },
+            success: function(label) {
+                label.closest('.form-group').removeClass('is-invalid').find(".text-danger").show();
+                label.remove();
+            },
+            errorPlacement: function(error, element) {
+                var elem;
+                if (element.parent(".input-group").length > 0) {
+                    elem = element.parent(".input-group").parent();
+                } else {
+                    elem = element.parent();
+                }
+                elem.append(error.addClass('text-danger'));
+            }
+
+        });
+
+    });
+
+    $(document).on('click', '#btn-iniciar-sesion', function() {
+        if (!$('#form-iniciar-sesion').valid()) {
+            return false
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: "{{url('autenticar')}}",
+            data: $("#form-iniciar-sesion").serialize(),
+            async: false,
+            success: function(data) {
+                if (data == 'ok') {
+                    window.location.href = "/inicio";
+                    localStorage.setItem("inicio_sesion", 1);
+
+                }
+            },
+            error: function(error) {
+                let errores = error.responseJSON.errors;
+                Toast.fire({
+                    icon: 'error',
+                    title: errores
+                })
+                $(button).prop('disabled', false);
+            }
+        })
+    })
+</script>
+
 @include('pages.footer-full')
 @endsection
 @section('scripts')

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-<title>Proyectos</title>
+<title>Incidencias</title>
 @endsection
 
 @section('content')
@@ -230,25 +230,47 @@
 
                             </div>
                         </div>
+
                         <div class="card card-preview">
                             <div class="card-inner">
 
                                 <div class="w-100 d-flex justify-content-between align-items-center mb-5">
-                                    <h4 class="nk-block-title mb-0">Todos los proyectos</h4>
-                                    <button type="button" class="btn btn-primary" id="btn_new_project" data-toggle="modal">Nuevo Proyecto</button>
+                                    @if($id_proyecto)
+                                    <h4 class="nk-block-title mb-0">{{$proyecto['nombre_proyecto']}} - {{$proyecto['codigo_proyecto']}}</h4>
+                                    @else
+                                    <h4 class="nk-block-title mb-0">Todas las incidencias</h4>
+                                    @endif
+                                    <button type="button" class="btn btn-primary" id="btn_new_project" data-toggle="modal">Nueva Incidencia</button>
                                 </div>
+                                <section>
+                                    <div class="d-flex justify-content-sm-between flex-column flex-sm-row">
+                                        <div  id="div_dataTables_length"></div>
 
+                                        <div  id="div_dataTables_filter"></div>
 
-                                <table id="table_projects" class="table table-striped table-bordered w-100">
-                                    <thead>
-                                        <tr class="nk-tb-item nk-tb-head">
-                                            <th class="nk-tb-col font-weight-normal"><span class="sub-text">Nombre</span></th>
-                                            <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">Clave</span></th>
-                                            <th class="nk-tb-col tb-col-md font-weight-normal"><span class="sub-text">Responsable</span></th>
-                                            <th class="nk-tb-col tb-col-lg font-weight-normal"><span class="sub-text">Fecha Inicio</span></th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="tbl-incidencia" style="font-size: 0.71rem!important;" class="table table-striped table-bordered w-100">
+                                            <thead>
+                                                <tr class="nk-tb-item nk-tb-head">
+                                                    <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Tipo</span></th>
+                                                    <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Clave</span></th>
+                                                    <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Resumen</span></th>
+                                                    <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Persona Asignada</span></th>
+                                                    <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Informador</span></th>
+                                                    <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Pr</span></th>
+                                                    <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Estado</span></th>
+                                                    <th class="nk-tb-col tb-col-md font-weight-normal text-center"><span class="sub-text">Resolución</span></th>
+                                                    <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Creado</span></th>
+                                                    <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Actualización</span></th>
+                                                    <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Vencimiento</span></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div id="div_dataTables_paginate" class="d-flex justify-content-end mt-2"></div>
+                                </section>
+
                             </div>
                         </div><!-- .card-preview -->
                     </div> <!-- nk-block -->
@@ -317,7 +339,7 @@
                     width: 200,
                     shading: false,
                 }, "success", 800);
-                $('#table_projects').DataTable().ajax.reload();
+                $('#tbl-incidencia').DataTable().ajax.reload();
             },
             error: function(error) {
                 DevExpress.ui.notify({
@@ -495,7 +517,7 @@
             }
         });
 
-        $('#table_projects').DataTable({
+        $('#tbl-incidencia').DataTable({
             language: {
                 "decimal": "",
                 "emptyTable": "No hay datos",
@@ -508,7 +530,7 @@
                 "loadingRecords": "Cargando...",
                 "processing": "Procesando...",
                 "search": "Buscar:",
-                "zeroRecords": "Proyecto no encontrado",
+                "zeroRecords": "Incidencia no encontrado",
                 "paginate": {
                     "first": "Primero",
                     "last": "Ultimo",
@@ -524,24 +546,64 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{{ url('table-projects')}}",
+                "url": "{{ url('tabla-incidencias')}}",
                 "type": 'GET',
+                'data': {
+                    'id_proyecto': "{{$id_proyecto}}"
+                },
             },
+            initComplete: (settings, json) => {
+                $('.dataTables_length').appendTo('#div_dataTables_length');
+                $("#tbl-incidencia_length").find('label').addClass('d-flex');
 
+                $('.dataTables_filter').appendTo('#div_dataTables_filter');
+                $("#tbl-incidencia_filter").find('label').addClass('d-flex');
+
+
+                $('.dataTables_paginate').appendTo('#div_dataTables_paginate');
+            },
             "columns": [{
-                    "data": "title",
-                    'className':'align-middle',
-                },
-                {
-                    "data": 'code',
+                    "data": "tipo",
                     'className': 'align-middle',
                 },
                 {
-                    "data": "staff",
+                    "data": 'codigo',
                     'className': 'align-middle',
                 },
                 {
-                    "data": "start_date",
+                    "data": "nombre",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "responsable",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "informante",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "prioridad",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "estado",
+                    'className': 'align-middle text-center',
+                },
+                {
+                    "data": "resolucion",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "fecha_creacion",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "fecha_actualizacion",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "fecha_vencimiento",
                     'className': 'align-middle',
                 },
             ]

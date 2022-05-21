@@ -23,8 +23,8 @@
                                 <div class="user-info d-none d-md-block">
                                     <div class="user-status">Administrator</div>
                                     <div class="user-name dropdown-indicator">
-                                        {{ auth()->user()->load('staff')->staff->first_name }}
-                                        {{auth()->user()->load('staff')->staff->last_name}}
+                                        {{ Session::get('nombre_staff')}}
+                                  
                                     </div>
                                 </div>
                             </div>
@@ -36,8 +36,8 @@
                                         <span>AB</span>
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">{{ auth()->user()->load('staff')->staff->first_name }} {{auth()->user()->load('staff')->staff->last_name}}</span>
-                                        <span class="sub-text">{{ auth()->user()->email }}</span>
+                                        <span class="lead-text">{{Session::get('nombre_staff')}} {{Session::get('apellido_paterno_staff')}} {{Session::get('apellido_materno_staff')}}</span>
+                                        <span class="sub-text">{{Session::get('correo_usuario')}}</span>
                                     </div>
                                 </div>
                             </div>

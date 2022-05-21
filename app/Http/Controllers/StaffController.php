@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    public function GetStaffs()
+    public function listarStaff()
     {
-        $staffs = Staff::where('current', 1)->get();
+        $staffs = Staff::where('vigente_staff', 1)->get();
         return response()->json($staffs);
     }
 }

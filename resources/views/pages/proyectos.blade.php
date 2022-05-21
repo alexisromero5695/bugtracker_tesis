@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-<title>Incidencias</title>
+<title>Proyectos</title>
 @endsection
 
 @section('content')
@@ -65,7 +65,7 @@
                                             MODALES
     --------------------------------------------------------------------------------    
 -->
-<div class="modal fade" data-backdrop="static" id="modal_new_project">
+<div class="modal fade" data-backdrop="static" id="md-crear-proyecto">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -75,18 +75,18 @@
                 </a>
             </div>
             <div class="modal-body">
-                <form action="#" id="newProjectForm" class="form-validate is-alter">
+                <form action="#" id="form-crear-proyecto" class="form-validate is-alter">
                     @csrf
                     <div class="form-group">
                         <label class="form-label" for="full-name">Nombre <strong class="text-danger">*</strong> </label>
                         <div class="form-control-wrap">
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="email-address">Clave <strong class="text-danger">*</strong></label>
                         <div class="form-control-wrap">
-                            <input type="text" class="form-control" id="code" name="code" required>
+                            <input type="text" class="form-control" id="codigo" name="codigo" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -114,7 +114,7 @@
                             <div class="form-icon form-icon-left">
                                 <em class="icon ni ni-calendar-alt"></em>
                             </div>
-                            <input data-date-format="dd-mm-yyyy" id="start_date" name="start_date" type="text" class="form-control date-picker">
+                            <input data-date-format="dd-mm-yyyy" id="fecha_inicio" name="fecha_inicio" type="text" class="form-control date-picker">
                         </div>
                     </div>
                     <div class="form-group">
@@ -123,16 +123,16 @@
                             <div class="form-icon form-icon-left">
                                 <em class="icon ni ni-calendar-alt"></em>
                             </div>
-                            <input data-date-format="dd-mm-yyyy" id="end_date" name="end_date" type="text" class="form-control date-picker">
+                            <input data-date-format="dd-mm-yyyy" id="fecha_fin" name="fecha_fin" type="text" class="form-control date-picker">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="" class="form-label">Descripción</label>
-                        <div name="description" id="description" class="summernote-minimal"></div>
+                        <div name="descripcion" id="descripcion" class="summernote-minimal"></div>
                     </div>
                     <div class="form-group d-flex justify-content-end">
                         <button type="button" class="btn btn-md btn-outline-light" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="btn_save_new_project" class="btn btn-md btn-primary">Agregar</button>
+                        <button type="button" id="btn-crear-proyecto" class="btn btn-md btn-primary">Agregar</button>
                     </div>
                 </form>
             </div>
@@ -143,7 +143,7 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="static" id="modal_list_avatar">
+<div class="modal fade" data-backdrop="static" id="md-listar-avatar">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="static" id="modal_upload_avatar">
+<div class="modal fade" data-backdrop="static" id="md-subir-avatar">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -230,39 +230,25 @@
 
                             </div>
                         </div>
-                        
                         <div class="card card-preview">
                             <div class="card-inner">
 
                                 <div class="w-100 d-flex justify-content-between align-items-center mb-5">
-                                    @if($project_id)
-                                    <h4 class="nk-block-title mb-0">{{$project['title']}} - {{$project['code']}}</h4>
-                                    @else
-                                    <h4 class="nk-block-title mb-0">Todas las incidencias</h4>
-                                    @endif
-                                    <button type="button" class="btn btn-primary" id="btn_new_project" data-toggle="modal">Nueva Incidencia</button>
+                                    <h4 class="nk-block-title mb-0">TODOS LOS PROYECTOS</h4>
+                                    <button type="button" class="btn btn-primary" id="btn-md-crear-proyecto" data-toggle="modal">Nuevo Proyecto</button>
                                 </div>
 
-                                <div class="table-responsive">
-                                    <table id="tabla_issues" style="font-size: 0.71rem!important;" class="table table-striped table-bordered w-100">
-                                        <thead>
-                                            <tr class="nk-tb-item nk-tb-head">
-                                                <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Tipo</span></th>
-                                                <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Clave</span></th>
-                                                <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Resumen</span></th>
-                                                <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Persona Asignada</span></th>
-                                                <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Informador</span></th>
-                                                <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Pr</span></th>
-                                                <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Estado</span></th>
-                                                <th class="nk-tb-col tb-col-md font-weight-normal text-center"><span class="sub-text">Resolución</span></th>
-                                                <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Creado</span></th>
-                                                <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Actualización</span></th>
-                                                <th class="nk-tb-col tb-col-lg font-weight-normal text-center"><span class="sub-text">Vencimiento</span></th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
 
+                                <table id="tbl-proyecto" class="table table-striped table-bordered w-100">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col font-weight-normal"><span class="sub-text">Nombre</span></th>
+                                            <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">Clave</span></th>
+                                            <th class="nk-tb-col tb-col-md font-weight-normal"><span class="sub-text">Responsable</span></th>
+                                            <th class="nk-tb-col tb-col-lg font-weight-normal"><span class="sub-text">Fecha Inicio</span></th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div><!-- .card-preview -->
                     </div> <!-- nk-block -->
@@ -281,20 +267,20 @@
                  FUNCIONES CREACION PROYECTO
     ------------------------------------------------------------------ */
 
-    $(document).on('click', '#btn_new_project', function() {
+    $(document).on('click', '#btn-md-crear-proyecto', function() {
         upload_image = 0;
         show_modal_upload = 0;
         $("#avatar_image").attr('src', '/images/default/default-600.png');
 
-        ResetForm('newProjectForm');
+        ResetForm('form-crear-proyecto');
         $.ajax({
             type: 'GET',
-            url: "{{url('get-staffs')}}",
+            url: "{{url('listar-staff')}}",
             async: false,
             success: function(data) {
                 var html = `<option selected disabled>Seleccionar</option>`;
                 $.each(data, function(i, item) {
-                    html += `<option value="${item.id}">${item.first_name} ${item.last_name}</option>`;
+                    html += `<option value="${item.id_staff}">${item.apellido_paterno_staff} ${item.apellido_materno_staff}</option>`;
                 })
                 $("#staff").html(html);
             },
@@ -302,12 +288,12 @@
                 console.error('Error: ' + error);
             }
         })
-        $("#modal_new_project").modal('show');
+        $("#md-crear-proyecto").modal('show');
     })
 
 
-    $(document).on('click', '#btn_save_new_project', function() {
-        if (!$('#newProjectForm').valid()) {
+    $(document).on('click', '#btn-crear-proyecto', function() {
+        if (!$('#form-crear-proyecto').valid()) {
             DevExpress.ui.notify({
                 position: 'top',
                 message: "Complete todos los campos obligatorios",
@@ -321,8 +307,8 @@
         $(btn).prop('disabled', true);
         $.ajax({
             type: 'POST',
-            url: "{{url('create-project')}}",
-            data: $('#newProjectForm').serialize() + '&description=' + encodeURIComponent($('#description').summernote('code')),
+            url: "{{url('crear-proyecto')}}",
+            data: $('#form-crear-proyecto').serialize() + '&descripcion=' + encodeURIComponent($('#description').summernote('code')),
             async: false,
             success: function(data) {
                 DevExpress.ui.notify({
@@ -331,7 +317,7 @@
                     width: 200,
                     shading: false,
                 }, "success", 800);
-                $('#tabla_issues').DataTable().ajax.reload();
+                $('#tbl-proyecto').DataTable().ajax.reload();
             },
             error: function(error) {
                 DevExpress.ui.notify({
@@ -343,7 +329,7 @@
                 console.error('Error: ' + error);
             }
         })
-        $("#modal_new_project").modal('hide');
+        $("#md-crear-proyecto").modal('hide');
         $(btn).prop('disabled', false);
     });
 
@@ -359,17 +345,17 @@
                         FUNCIONES PARA SUBIR AVATAR
         ------------------------------------------------------------------ */
         $(document).on('click', '#btn_avatar', function() {
-            $("#modal_new_project").modal('hide');
+            $("#md-crear-proyecto").modal('hide');
             $.ajax({
                 type: 'GET',
-                url: "{{url('get-avatars')}}",
+                url: "{{url('listar-avatar')}}",
                 async: false,
                 success: function(data) {
                     var html = ``;
                     $.each(data, function(i, item) {
                         html += `<li class="preview-item">
                                 <div class="user-avatar sq">
-                                    <img data-id="${item.id}" role="button" class="option_avatar" src='/files/avatar/${item.path}' alt=''>
+                                    <img data-id="${item.id_avatar}" role="button" class="option_avatar" src='/files/avatar/${item.imagen_avatar}' alt=''>
                                 </div>
                             </li>`;
                     })
@@ -381,7 +367,7 @@
                 }
             })
             setTimeout(() => {
-                $("#modal_list_avatar").modal('show');
+                $("#md-listar-avatar").modal('show');
             }, 200);
         })
 
@@ -389,10 +375,10 @@
             var files = event.target.files;
             var done = function(url) {
                 image.src = url;
-                $("#modal_list_avatar").modal('hide');
+                $("#md-listar-avatar").modal('hide');
                 show_modal_upload = 1;
                 setTimeout(() => {
-                    $("#modal_upload_avatar").modal('show');
+                    $("#md-subir-avatar").modal('show');
                 }, 200);
             };
             if (files && files.length > 0) {
@@ -404,7 +390,7 @@
             }
         });
 
-        $("#modal_upload_avatar").on('shown.bs.modal', function() {
+        $("#md-subir-avatar").on('shown.bs.modal', function() {
             if (cropper != null) {
                 cropper.destroy();
             }
@@ -420,16 +406,16 @@
             setTimeout(() => {
                 show_modal_upload = 0;
                 if (upload_image == 0) {
-                    $("#modal_list_avatar").modal('show');
+                    $("#md-listar-avatar").modal('show');
                 }
 
             }, 200);
         });
 
-        $("#modal_list_avatar").on('hidden.bs.modal', function() {
+        $("#md-listar-avatar").on('hidden.bs.modal', function() {
             setTimeout(() => {
                 if (show_modal_upload == 0) {
-                    $("#modal_new_project").modal('show');
+                    $("#md-crear-proyecto").modal('show');
                 }
             }, 200);
         });
@@ -446,7 +432,7 @@
                 reader.onloadend = function() {
                     var base64data = reader.result;
                     $.ajax({
-                        url: "{{url('upload-avatar')}}",
+                        url: "{{url('subir-avatar')}}",
                         method: 'POST',
                         data: {
                             "_token": "{{ csrf_token() }}",
@@ -455,12 +441,12 @@
                         success: function(data) {
                             show_modal_upload = 0;
                             upload_image = 1;
-                            $("#modal_upload_avatar").modal('hide');
-                            $('#avatar_image').attr('src', data.path);
-                            $('#avatar').val(data.id);
-                            $('#newProjectForm').valid();
+                            $("#md-subir-avatar").modal('hide');
+                            $('#avatar_image').attr('src', data.imagen_avatar);
+                            $('#avatar').val(data.id_avatar);
+                            $('#form-crear-proyecto').valid();
                             setTimeout(() => {
-                                $("#modal_new_project").modal('show');
+                                $("#md-crear-proyecto").modal('show');
                             }, 200);
                         }
                     });
@@ -471,25 +457,25 @@
         $(document).on('click', '.option_avatar', function() {
             $("#avatar_image").attr('src', $(this).attr('src'));
             $('#avatar').val($(this).data('id'));
-            $("#modal_list_avatar").modal('hide');
-            $('#newProjectForm').valid();
+            $("#md-listar-avatar").modal('hide');
+            $('#form-crear-proyecto').valid();
             setTimeout(() => {
-                $("#modal_new_project").modal('show');
+                $("#md-crear-proyecto").modal('show');
             }, 200);
         });
 
         /* ------------------------------------------------------------------
              INICIALIZACION LIBRERIAS VALIDACION, DATATABLE, SUMMERNOTE
         ------------------------------------------------------------------ */
-        $("#newProjectForm").validate({
+        $("#form-crear-proyecto").validate({
             rules: {
-                title: "required",
-                code: "required",
+                nombre: "required",
+                codigo: "required",
                 avatar: "required",
             },
             messages: {
-                title: "Este campo es requerido",
-                code: "Este campo es requerido",
+                nombre: "Este campo es requerido",
+                codigo: "Este campo es requerido",
                 avatar: "Este campo es requerido",
             },
             errorElement: "em",
@@ -509,7 +495,7 @@
             }
         });
 
-        $('#tabla_issues').DataTable({
+        $('#tbl-proyecto').DataTable({
             language: {
                 "decimal": "",
                 "emptyTable": "No hay datos",
@@ -522,7 +508,7 @@
                 "loadingRecords": "Cargando...",
                 "processing": "Procesando...",
                 "search": "Buscar:",
-                "zeroRecords": "Incidencia no encontrado",
+                "zeroRecords": "Proyecto no encontrado",
                 "paginate": {
                     "first": "Primero",
                     "last": "Ultimo",
@@ -538,55 +524,24 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{{ url('table-issues')}}",
+                "url": "{{ url('tabla-proyectos')}}",
                 "type": 'GET',
-                'data': {
-                    'project_id': "{{$project_id}}"
-                },
             },
 
             "columns": [{
-                    "data": "type",
+                    "data": "nombre",
+                    'className':'align-middle',
+                },
+                {
+                    "data": 'codigo',
                     'className': 'align-middle',
                 },
                 {
-                    "data": 'code',
+                    "data": "staff",
                     'className': 'align-middle',
                 },
                 {
-                    "data": "title",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "handler",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "reporter",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "priority",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "state",
-                    'className': 'align-middle text-center',
-                },
-                {
-                    "data": "resolution",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "creation_date",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "last_update",
-                    'className': 'align-middle',
-                },
-                {
-                    "data": "expiration_date",
+                    "data": "fecha_inicio",
                     'className': 'align-middle',
                 },
             ]

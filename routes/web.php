@@ -13,24 +13,48 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Auth::routes();
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/inicio', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Auth::routes();
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-/* STAFF */
-Route::get('get-staffs', '\App\Http\Controllers\StaffController@GetStaffs');
 
-/* PROYECTOS */
-Route::get('projects', '\App\Http\Controllers\ProjectController@Index')->name('projects');
-Route::get('table-projects', '\App\Http\Controllers\ProjectController@Table')->name('table-projects');
-Route::post('create-project', '\App\Http\Controllers\ProjectController@Create');
-/* INCIDENCIAS */
-Route::get('issues/{project_id?}', '\App\Http\Controllers\IssueController@Index')->name('issues');
-Route::get('table-issues', '\App\Http\Controllers\IssueController@Table')->name('table-issues');
-Route::post('create-issue', '\App\Http\Controllers\IssueController@Create');
-/* AVATAR */
-Route::post('upload-avatar', '\App\Http\Controllers\AvatarController@UploadAvatar');
-Route::get('get-avatars', '\App\Http\Controllers\AvatarController@GetAvatars');
+/*==========================================================================================
+                                        AUTENTICACION
+==========================================================================================*/
+Route::get('inicio-sesion', 'App\Http\Controllers\AutenticacionController@login');
+Route::post('autenticar', 'App\Http\Controllers\AutenticacionController@autenticar');
+Route::get('registrar', 'App\Http\Controllers\AutenticacionController@registrar');
+Route::get('cerrar-sesion', 'App\Http\Controllers\AutenticacionController@cerrarSesion');
+
+/*==========================================================================================
+                                        AVATAR
+==========================================================================================*/
+Route::post('subir-avatar', '\App\Http\Controllers\AvatarController@subirAvatar');
+Route::get('listar-avatar', '\App\Http\Controllers\AvatarController@listarAvatar');
+
+/*==========================================================================================
+                                        STAFF
+==========================================================================================*/
+Route::get('listar-staff', '\App\Http\Controllers\StaffController@listarStaff');
+
+/*==========================================================================================
+                                        PROYECTOS
+==========================================================================================*/
+Route::get('proyectos', '\App\Http\Controllers\ProyectoController@index')->name('proyectos');
+Route::get('tabla-proyectos', '\App\Http\Controllers\ProyectoController@tabla')->name('tabla-proyectos');
+Route::post('crear-proyecto', '\App\Http\Controllers\ProyectoController@crear');
+
+/*==========================================================================================
+                                        INCIDENCIAS
+==========================================================================================*/
+Route::get('incidencias/{id_proyecto?}', '\App\Http\Controllers\IncidenciasController@Index')->name('incidencias');
+Route::get('tabla-incidencias', '\App\Http\Controllers\IncidenciasController@tabla')->name('tabla-incidencias');
+Route::post('crear-incidencia', '\App\Http\Controllers\IncidenciasController@crear');
