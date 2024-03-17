@@ -246,6 +246,7 @@
                                             <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">Clave</span></th>
                                             <th class="nk-tb-col tb-col-md font-weight-normal"><span class="sub-text">Responsable</span></th>
                                             <th class="nk-tb-col tb-col-lg font-weight-normal"><span class="sub-text">Fecha Inicio</span></th>
+                                            <th class="nk-tb-col tb-col-lg font-weight-normal"><span class="sub-text"></span></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -280,7 +281,7 @@
             success: function(data) {
                 var html = `<option selected disabled>Seleccionar</option>`;
                 $.each(data, function(i, item) {
-                    html += `<option value="${item.id_staff}">${item.apellido_paterno_staff} ${item.apellido_materno_staff}</option>`;
+                    html += `<option value="${item.id_staff}">${item.nombre_staff} ${item.apellido_paterno_staff} ${item.apellido_materno_staff}</option>`;
                 })
                 $("#staff").html(html);
             },
@@ -542,6 +543,10 @@
                 },
                 {
                     "data": "fecha_inicio",
+                    'className': 'align-middle',
+                },
+                {
+                    "data": "accion",
                     'className': 'align-middle',
                 },
             ]

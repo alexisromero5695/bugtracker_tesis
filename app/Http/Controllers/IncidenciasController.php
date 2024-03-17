@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estado;
+use App\Models\Incidencia;
+use App\Models\Prioridad;
+use App\Models\Priority;
 use App\Models\Proyecto;
+use App\Models\Resolucion;
+use App\Models\TipoIncidencia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,19 +16,25 @@ use Yajra\DataTables\Facades\DataTables;
 
 class IncidenciasController extends Controller
 {
-    public function index($id_proyecto = null)
+    public function index($codigo_proyecto = null)
     {
         $proyecto = [];
-        if ($id_proyecto) {
+        if ($codigo_proyecto) {
             $proyecto = Proyecto::leftjoin('staff', 'proyecto.id_staff', 'staff.id_staff')
                 ->join('avatar', 'proyecto.id_avatar', 'avatar.id_avatar')
-                ->where('proyecto.id_proyecto', $id_proyecto)
+                ->where('proyecto.codigo_proyecto', $codigo_proyecto)
                 ->first();
             if (!$proyecto) {
                 abort(404);
             }
         }
-        return view('pages.incidencias', compact('proyecto', 'id_proyecto'));
+
+        $prioridades = Prioridad::orderby('orden_prioridad')->get();
+        return view('pages.incidencias', compact(
+            'proyecto',
+            'codigo_proyecto',
+            'prioridades'
+        ));
     }
     public function tabla(Request $request)
     {
@@ -60,15 +72,11 @@ class IncidenciasController extends Controller
                 inner join prioridad on prioridad.id_prioridad = incidencia.id_prioridad 
                 inner join tipo_incidencia on tipo_incidencia.id_tipo_incidencia = incidencia.id_tipo_incidencia 
                 left join resolucion on resolucion.id_resolucion = incidencia.id_resolucion";
-        if ($request->id_proyecto) {
-            $sql .=  " where proyecto.id_proyecto = $request->id_proyecto";
+        if ($request->codigo_proyecto) {
+            $sql .=  " where proyecto.codigo_proyecto = '$request->codigo_proyecto'";
         }
-
         $issues =   DB::select(DB::raw($sql));
-
         foreach ($issues as $key => $value) {
-
-
             if ($value->id_responsable) {
                 $handlerAbrev = strtoupper(substr($value->nombre_responsable, 0, 1) . '' . substr($value->apellido_paterno_responsable, 0, 1));
                 $responsable = "<div class='user-card text-nowrap'>
@@ -88,7 +96,6 @@ class IncidenciasController extends Controller
                             </div>";
             }
 
-  
             if ($value->id_informante) {
                 $reporterrAbrev = strtoupper(substr($value->nombre_informante, 0, 1) . '' . substr($value->apellido_paterno_informante, 0, 1));
                 $informante = "<div class='user-card text-nowrap'>
@@ -99,7 +106,7 @@ class IncidenciasController extends Controller
                                     <span class='tb-lead ml-2'>$value->nombre_informante $value->apellido_paterno_informante</span>
                                 </div>
                             </div>";
-            }else{
+            } else {
                 $informante = "<div class='user-card text-nowrap'>
                                 <img  style='max-width:17%' src='/images/default/sin-asignar.svg'>
                                 <div class=''>
@@ -108,15 +115,13 @@ class IncidenciasController extends Controller
                             </div>";
             }
 
-            
-
             array_push($data,    [
                 'tipo' =>  $value->tipo,
-                'codigo' => "<p class='text-nowrap'> $value->codigo_proyecto-$value->numero_incidencia</p>",
-                'nombre' => "<p class='text-nowrap'> $value->nombre_incidencia</p>",
+                'codigo' => "<a href='/incidencia/$value->codigo_proyecto-$value->numero_incidencia'><p class='text-nowrap'> $value->codigo_proyecto-$value->numero_incidencia</p></a>",
+                'nombre' => "<a href='/incidencia/$value->codigo_proyecto-$value->numero_incidencia'><p class='text-nowrap'> $value->nombre_incidencia</p><a>",
                 'responsable' =>  $responsable,
                 'informante' =>  $informante,
-                'prioridad' => "<img src='/files/priority/$value->imagen_prioridad'>",
+                'prioridad' => "<img src='/files/prioridad/$value->imagen_prioridad'>",
                 'estado' => "<span style='border-radius: 14px; background: $value->color_estado; color: #fff;padding: 3px 8px;' class='text-nowrap'>$value->estado</span>",
                 'resolucion' => $value->resolucion,
                 'fecha_creacion' => ($value->fecha_creacion_incidencia) ?  "<p class='text-nowrap'> " . Carbon::parse($value->fecha_creacion_incidencia)->format('d-m-Y g:i A') . "</p>" : '',
@@ -138,5 +143,53 @@ class IncidenciasController extends Controller
                 'fecha_vencimiento'
             ])
             ->make(true);
+    }
+
+    function crear(Request $request)
+    {
+        $numero_incidencia = Incidencia::where('id_proyecto', $request->proyecto)
+            ->max('numero_incidencia');
+        Incidencia::create([
+            'id_proyecto' => $request->proyecto,
+            'id_informante' => $request->informante,
+            'id_responsable' => $request->responsable,
+            'id_estado_incidencia' => 1, //Nuevo
+            'id_tipo_incidencia' => $request->tipo_incidencia,
+            'id_prioridad' => $request->prioridad,
+            'nombre_incidencia' => $request->nombre,
+            'descripcion_incidencia' => $request->descripcion,
+            'fecha_creacion_incidencia' => Carbon::now(),
+            'fecha_actualizacion_incidencia' => Carbon::now(),
+            'fecha_vencimiento_incidencia' => Carbon::parse($request->fecha_vencimiento)->format('Y-m-d'),
+            'numero_incidencia' => $numero_incidencia + 1,
+        ]);
+    }
+
+    /* ======================================================================================================
+                                                INCIDENCIA  
+    ======================================================================================================*/
+    function incidencia($codigo_incidencia)
+    {
+        $arrCodigo = explode("-", $codigo_incidencia);
+        $incidencia = Incidencia::join('proyecto', 'proyecto.id_proyecto', 'incidencia.id_proyecto')
+            ->join('avatar', 'avatar.id_avatar', 'proyecto.id_avatar')
+            ->where('proyecto.codigo_proyecto', $arrCodigo[0])
+            ->where('incidencia.numero_incidencia', $arrCodigo[1])
+            ->first();
+        if (!$incidencia) {
+            abort(404);
+        }
+
+        $prioridades = Prioridad::orderby('orden_prioridad')->get();
+        $tipos_incidencia = TipoIncidencia::orderby('orden_tipo_incidencia')->get();
+        $estados = Estado::orderby('orden_estado')->get();
+        $resoluciones = Resolucion::orderby('orden_resolucion')->get();
+        return view('pages.incidencia', compact(
+            'resoluciones',
+            'estados',
+            'tipos_incidencia',
+            'incidencia',
+            'prioridades',
+        ));
     }
 }

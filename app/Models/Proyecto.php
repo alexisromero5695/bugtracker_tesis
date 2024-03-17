@@ -17,7 +17,8 @@ class Proyecto extends Model
         'codigo_proyecto',
         'descripcion_proyecto',
         'fecha_inicio_proyecto',
-        'fecha_fin_proyecto'
+        'fecha_fin_proyecto',
+        'vigente_proyecto'
     ];
     public $timestamps = false;
 }

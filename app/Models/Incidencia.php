@@ -17,14 +17,15 @@ class Incidencia extends Model
         'id_estado_incidencia',
         'id_prioridad',
         'id_resolucion',
+        'id_sistema',
+        'id_cliente',
         'nombre_incidencia',
         'descripcion_incidencia',
         'fecha_creacion_incidencia',
         'fecha_actualizacion_incidencia',
         'fecha_vencimiento_incidencia',
         'id_tipo_incidencia',
-        'numero_incidencia',
-            
+        'numero_incidencia',            
     ];
     public $timestamps = false;
 }

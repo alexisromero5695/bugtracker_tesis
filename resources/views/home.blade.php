@@ -48,7 +48,7 @@
 
                                     <div class="small-box bg-danger">
                                         <div class="inner">
-                                            <h3>53</h3>
+                                            <h3 class="text-white">53</h3>
                                             <p class="mb-1">Errores Cerrados</p>
                                         </div>
                                         <div class="icon">
@@ -60,24 +60,24 @@
 
                                 <div class="col-lg-3 col-6">
 
-                                    <div class="small-box bg-info">
+                                    <div class="small-box bg-primary">
                                         <div class="inner">
-                                            <h3>44</h3>
-                                            <p class="mb-1">Hitos Abiertos</p>
+                                            <h3 class="text-white">53</h3>
+                                            <p class="mb-1 text-white">Hitos Abiertos</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-flag"></i>
                                         </div>
-                                        <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+                                        <!-- <a href="#" class="small-box-footer">More primary <i class="fas fa-arrow-circle-right"></i></a> -->
                                     </div>
                                 </div>
 
                                 <div class="col-lg-3 col-6">
 
-                                    <div class="small-box bg-info">
+                                    <div class="small-box bg-primary">
                                         <div class="inner">
-                                            <h3>65</h3>
-                                            <p class="mb-1">Hitos Cerrados</p>
+                                            <h3 class="text-white">53</h3>
+                                            <p class="mb-1 text-white">Hitos Cerrados</p>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-flag"></i>

@@ -14,10 +14,10 @@ class Usuario extends Model implements Authenticatable
     protected $fillable = [
         'id_staff',
         'id_tipo_usuario',
+        'id_perfil',
         'correo_usuario',
         'contrasenia_usuario',
         'vigente_usuario',
-
     ];
     protected $primaryKey = 'id_usuario';
 
@@ -67,6 +67,7 @@ class Usuario extends Model implements Authenticatable
     public function getAuthPassword()
     {
         return $this->contrasenia_usuario;
+        // return $this->getAuthIdentifier();
     }
 
     /**

@@ -10,16 +10,19 @@ class Staff extends Model
     use HasFactory;
     protected $table = "staff";
     public $timestamps = false;
-    protected $fillable = [        
+    protected $fillable = [
         'id_color',
         'nombre_staff',
-        'apellido_materno_staff',
         'apellido_paterno_staff',
+        'apellido_materno_staff',
+        'documento_staff',
         'puesto',
         'departamento',
         'empresa',
         'direccion_staff',
-        'vigente_staff'
+        'telefono_staff',
+        'vigente_staff',
+        'orden_staff'
     ];
     protected $primaryKey = 'id_staff';
     protected $appends = ['nombre_completo'];

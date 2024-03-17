@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper as Helper;
 use App\Models\Staff;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
@@ -11,16 +12,6 @@ use Illuminate\Support\Facades\Session;
 
 class AutenticacionController extends Controller
 {
-
-
-    public function login()
-    {
-        if (Auth::check()) {
-            return redirect('/dashboard');
-        }
-        return view('pages.acceso');
-    }
-
     /* Authenticacion campos personalizados     
         1.- En auth.php
             'providers' => [
@@ -74,13 +65,20 @@ class AutenticacionController extends Controller
 
         if (Auth::attempt($credentials)) {
             $staff = Staff::join('usuario', 'usuario.id_staff', 'staff.id_staff')
+                ->join('perfil', 'perfil.id_perfil', 'usuario.id_perfil')
                 ->where('staff.id_staff', Auth::user()->id_staff)
                 ->first();
+           
 
+            $menu = Helper::CargarMenu($staff['id_perfil']);
+            Session::put('staff', $staff);
+         
+            Session::put('menu', $menu);
+            Session::put('id_staff', $staff['id_staff']);
             Session::put('nombre_staff', $staff['nombre_staff']);
             Session::put('apellido_paterno_staff', $staff['apellido_paterno_staff']);
             Session::put('apellido_materno_staff', $staff['apellido_materno_staff']);
-            Session::put('correo_usuario', $staff['correo_usuario']);
+            Session::put('correo_usuario', $staff['correo_usuario']); 
             // Session::put('background_avatar', $colores[rand(0, 10)]);
             Session::put('background_avatar', "#039BE5");
 
@@ -96,42 +94,30 @@ class AutenticacionController extends Controller
     }
 
     public function registrar(Request $request)
-    {
-
-
-        $staff = Staff::create([
-            'nombre_staff' => 'Alexis',
-            'apellido_paterno_staff' => 'Romero',
-            'apellido_materno_staff' => 'Correa',
-            'vigente_staff' => 1,
-        ]);
-        Usuario::create([
-            'id_staff' => $staff['id_staff'],
-            'id_tipo_usuario' => 1,
-            'correo_usuario' =>  'aromero@gmail.com',
-            'contrasenia_usuario' => Hash::make(123),
-            'vigente_usuario' => 1
-        ]);
-
-
-        return;
-
-        if (!empty(Usuario::where('correo_usuario', $request->correo_electronico)->where('vigente_usuario', 1)->first())) {
-            return response()->json([
-                'success' => 'false',
-                'errors'  => 'El correo electrónico "' . $request->correo_electronico . '" ya está en uso.'
-            ], 400);
+    {    
+        $errors = [];
+     
+        $existingUserByEmail = Usuario::where('correo_usuario', $request->correo)->where('vigente_usuario',1)->first();
+        if ($existingUserByEmail) {
+            $errors['correo'] ='El correo electrónico "' . $request->correo . '" ya está en uso.';
         }
+      
+        if (!empty($errors)) {
+            return response()->json(['errors' => $errors], 422);
+        }
+        $max_orden = Staff::max('orden_staff');       
+        $orden_staff = $max_orden + 1;
+
         $staff = Staff::create([
-            'nombre_staff' => $request->nombre,
+            'nombre_staff' => $request->nombres,
             'apellido_paterno_staff' =>  $request->apellido_paterno,
             'apellido_materno_staff' => $request->apellido_materno,
             'vigente_staff' => 1,
+            'orden_staff'=> $orden_staff,
         ]);
         Usuario::create([
             'id_staff' => $staff['id_staff'],
-            'id_tipo_usuario' => $request->tipo_usuario,
-            'email_usuario' =>  $request->correo_electronico,
+            'correo_usuario' =>  $request->correo,
             'contrasenia_usuario' => Hash::make($request->contrasenia),
             'vigente_usuario' => 1
         ]);

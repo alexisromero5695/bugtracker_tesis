@@ -5,9 +5,9 @@
                 <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
             </div>
             <div class="nk-header-brand d-xl-none">
-                <a href="html/index.html" class="logo-link">
-                    <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
-                    <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                <a href="/inicio" class="logo-link">
+                <img class="logo-light logo-img" src="./images/logo-bugtracker-negativo-total.svg" srcset="./images/logo-bugtracker-negativo-total.svg 2x" alt="logo">
+                <img class="logo-dark logo-img" src="./images/logo-bugtracker-negativo.svg" srcset="./images/logo-bugtracker-negativo.svg 2x" alt="logo-dark">
                 </a>
             </div><!-- .nk-header-brand -->
 
@@ -21,10 +21,9 @@
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-md-block">
-                                    <div class="user-status">Administrator</div>
-                                    <div class="user-name dropdown-indicator">
-                                        {{ Session::get('nombre_staff')}}
-                                  
+                                    <div class="user-status text-white text-uppercase">{{Session::get('staff')->nombre_perfil}}</div>
+                                    <div class="user-name dropdown-indicator text-uppercase">
+                                        {{Session::get('staff')->nombre_staff}} {{Session::get('apellido_paterno_staff')}} {{Session::get('staff')->apellido_materno_staff}}                                  
                                     </div>
                                 </div>
                             </div>
@@ -36,8 +35,8 @@
                                         <span>AB</span>
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">{{Session::get('nombre_staff')}} {{Session::get('apellido_paterno_staff')}} {{Session::get('apellido_materno_staff')}}</span>
-                                        <span class="sub-text">{{Session::get('correo_usuario')}}</span>
+                                        <span class="lead-text">{{Session::get('staff')->nombre_staff}} {{Session::get('apellido_paterno_staff')}} {{Session::get('staff')->apellido_materno_staff}}  </span>
+                                        <span class="sub-text">{{Session::get('staff')->correo_usuario}}</span>
                                     </div>
                                 </div>
                             </div>

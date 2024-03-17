@@ -22,6 +22,7 @@
     border-radius: 100%;
     color: black;
     opacity: 1;
+    background: #e5e9f2;
 }
 
 .btn-close-modal:hover {

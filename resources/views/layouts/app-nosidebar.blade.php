@@ -17,11 +17,11 @@
 
 </head>
 
-<body class="nk-body bg-white npc-general pg-auth">
+<body class="nk-body bg-white npc-general pg-auth ">
     <div class="nk-app-root">
         <div class="nk-main">
             <div class="nk-wrap nk-wrap-nosidebar">
-                <div class="nk-content ">
+                <div class="nk-content">
                     @yield('content')
                 </div>
             </div>

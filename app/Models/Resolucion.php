@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Priority extends Model
+class Resolucion extends Model
 {
     use HasFactory;
-    protected $table = 'priority';
-    protected $primaryKey = 'id';
+    protected $table = 'resolucion';
+    protected $primaryKey = 'id_resolucion';
     protected $fillable = [
-        'name',
-        'order',
-        'path',
+        'nombre_resolucion',
+        'orden_resolucion',    
+        'descripcion_resolucion',      
     ];
     public $timestamps = false;
 }

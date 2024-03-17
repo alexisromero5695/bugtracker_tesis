@@ -1,41 +1,47 @@
-<div class="nk-sidebar nk-sidebar-fixed is-dark " data-content="sidebarMenu">
+
+@php
+    $MenuString = Session::get('menu');
+    $Menu = json_decode($MenuString);
+@endphp
+
+<div class="nk-sidebar nk-sidebar-fixed is-soluciones " data-content="sidebarMenu">
     <div class="nk-sidebar-element nk-sidebar-head">
         <div class="nk-menu-trigger">
             <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a>
             <a href="#" class="nk-nav-compact nk-quick-nav-icon d-none d-xl-inline-flex" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
         </div>
         <div class="nk-sidebar-brand">
-            <a href="html/index.html" class="logo-link nk-sidebar-logo">
-                <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
-                <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+            <a href="/inicio" class="logo-link nk-sidebar-logo">
+                <img class="logo-light logo-img" src="./images/logo-bugtracker-negativo-total.svg" srcset="./images/logo-bugtracker-negativo-total.svg 2x" style="max-width: 12rem;" alt="logo">
+                <img class="logo-dark logo-img" src="./images/logo-bugtracker-negativo.svg" srcset="./images/logo-bugtracker-negativo.svg 2x" style="max-width: 12rem;" alt="logo-dark">
             </a>
         </div>
-    </div><!-- .nk-sidebar-element -->
+    </div>
     <div class="nk-sidebar-element nk-sidebar-body">
         <div class="nk-sidebar-content">
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
-                    <li class="nk-menu-item">
-                        <a href="{{ route('home') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-home"></em></span>
-                            <span class="nk-menu-text">Inicio</span>
+                    @if(Session::get('id_perfil') == "" && isset($Menu->menu))
+                        @foreach ($Menu->menu as $menu)
+                            @if(!isset($menu->submenu))      
+                                <li class="nk-menu-item {{ request()->is('sites/*/edit') ? 'active' : '' }}">                        
+                                    <a href="<?php echo ( $menu->url != "" && $menu->url != null) ? $menu->url : "javascript:void(0)"?>" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon {{$menu->icono}}"></em></span>
+                                        <span class="nk-menu-text">{{$menu->nombre }}</span>
+                                    </a>     
+                                </li>            
+                            @else
+                                <li class="nk-menu-item has-sub {{ request()->is('sites/*/edit') ? 'active' : '' }}">
+                                    <a href="<?php echo ( $menu->url != "" && $menu->url != null) ? $menu->url : "javascript:void(0)"?>" class="nk-menu-link nk-menu-toggle">
+                                    <span class="nk-menu-icon"><em class="icon {{$menu->icono}}"></em></span><span class="nk-menu-text">{{$menu->nombre }}</span></a>                                     
+                                    @include('pages.sidebar-submenu',['menu'=>$menu->submenu])                                          
+                                </li>
+                            @endif
+                        @endforeach
+                    @endif         
+                </ul>
+            </div>
+        </div>
+    </div>
+</div> 
 
-                        </a>
-                    </li>
-                    <li class="nk-menu-item">
-                        <a href="{{ route('proyectos') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
-                            <span class="nk-menu-text">Proyectos</span>
-                        </a>
-                    </li>
-                    <li class="nk-menu-item">
-                        <a href="{{ route('incidencias') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
-                            <span class="nk-menu-text">Incidencias</span>
-                        </a>
-                    </li>
-                </ul><!-- .nk-menu -->
-            </div><!-- .nk-sidebar-menu -->
-        </div><!-- .nk-sidebar-content -->
-    </div><!-- .nk-sidebar-element -->
-</div>

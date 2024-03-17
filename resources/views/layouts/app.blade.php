@@ -24,6 +24,7 @@
     <!-- DevExtreme library -->
     <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.2.18/js/dx.all.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
 
 </head>
 
@@ -33,7 +34,7 @@
     <div class="nk-app-root">
         <div class="nk-main">
             <div class="nk-wrap nk-wrap-nosidebar">
-                <div class="nk-content ">
+                <div class="nk-content bg-light-soluciones">
                     @yield('content')
                 </div>
             </div>

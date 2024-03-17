@@ -964,4 +964,6 @@ function ResetForm(formId) {
         $(element).removeClass('border border-danger');
         $(element).val('');
     }
+    $(".invalid-feedback").remove();
+    $(".form-control").removeClass("is-invalid");
 }

@@ -5,8 +5,8 @@
 <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
     <div class="brand-logo pb-4 text-center">
         <a href="html/index.html" class="logo-link">
-            <img class="logo-light logo-img logo-img-lg" src="{{asset('images/logo.png')}}" srcset="./images/logo2x.png 2x" alt="logo">
-            <img class="logo-dark logo-img logo-img-lg" src="{{asset('images/logo-dark.png')}}" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+            <img class="logo-light logo-img logo-img-lg" src="{{asset('images/logo-bugtracker.svg')}}" srcset="./images/logo-bugtracker.svg 2x" alt="logo">
+            <img class="logo-dark logo-img logo-img-lg" src="{{asset('images/logo-bugtracker.svg')}}" srcset="./images/logo-bugtracker.svg 2x" alt="logo-dark">
         </a>
     </div>
 
@@ -18,98 +18,58 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('register') }}">
-                @csrf
-
-                <div class="mb-3">
-                    <label for="username" class="col-form-label text-md-end d-block">Nombre de usuario</label>
-                    <div class="">
-                        <input id="username" type="text" class="form-control @error('name') is-invalid @enderror" name="username" value="{{ old('name') }}" required autocomplete="username" autofocus>
-
-                        @error('username')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
+            <form method="POST" id="form-registro">
+                @csrf           
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="first_name" class="col-form-label text-md-end">Nombres</label>
+                    <div class="col-md-12">
+                        <label for="nombres" class="col-form-label text-md-end">Nombres <span class="text-danger">*</span></label>
                         <div>
-                            <input id="first_name" type="text" class="form-control @error('name') is-invalid @enderror" name="first_name" value="{{ old('name') }}" required autocomplete="first_name" autofocus>
+                            <input id="nombres" type="text" class="form-control" name="nombres" required autocomplete="nombres" autofocus>
+                        </div>
+                    </div>                   
+                </div>
 
-                            @error('first_name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                <div class="row mb-3">
+                <div class="col-md-6">
+                        <label for="apellido_paterno" class="col-form-label text-md-end">Apellido Paterno <span class="text-danger">*</span></label>
+                        <div class="">
+                            <input id="apellido_paterno" type="text" class="form-control" name="apellido_paterno" required autocomplete="apellido_paterno" autofocus>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="last_name" class="col-form-label text-md-end">Apellidos</label>
+                        <label for="apellido_materno" class="col-form-label text-md-end">Apellido Materno <span class="text-danger">*</span></label>
                         <div class="">
-                            <input id="last_name" type="text" class="form-control @error('name') is-invalid @enderror" name="last_name" value="{{ old('name') }}" required autocomplete="last_name" autofocus>
-
-                            @error('username')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                            <input id="apellido_materno" type="text" class="form-control" name="apellido_materno" required autocomplete="apellido_materno" autofocus>
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
-
-
 
                 <div class="mb-3">
-                    <label for="email" class="col-form-label text-md-end">Correo electrónico</label>
-
+                    <label for="correo" class="col-form-label text-md-end">Correo electrónico <span class="text-danger">*</span></label>
                     <div class="">
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                        @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <input id="correo" type="correo" class="form-control" name="correo" required autocomplete="correo">
                     </div>
                 </div>
 
                 <div class=" mb-3">
-                    <label for="password" class="col-form-label text-md-end">Contraseña</label>
-
+                    <label for="contrasenia" class="col-form-label text-md-end">Contraseña <span class="text-danger">*</span></label>
                     <div class="">
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <input id="contrasenia" type="password" class="form-control" name="contrasenia" required autocomplete="new-contrasenia">
                     </div>
                 </div>
 
                 <div class=" mb-3">
-                    <label for="password-confirm" class="col-form-label text-md-end">Confirmar contraseña</label>
-
+                    <label for="contrasenia-confirm" class="col-form-label text-md-end">Confirmar contraseña <span class="text-danger">*</span></label>
                     <div class="">
-                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                        <input id="contrasenia-confirm" type="password" class="form-control" name="contrasenia_confirmation" required autocomplete="new-contrasenia">
                     </div>
                 </div>
 
-                <div class="row mb-0">
-                    <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
-                            Registrarte
-                        </button>
-                    </div>
+                <div class="text-center mb-0">
+                    <button type="button" id="btn-registro" class="btn btn-primary">
+                        Registrarte
+                    </button><br>
+                    ¿Tienes una cuenta?<a href="/login"> Iniciar Sesion</a>
                 </div>
             </form>
 
@@ -117,6 +77,111 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#form-registro').validate({
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            focusInvalid: false,
+            rules: {      
+                nombres: {
+                    required: true,
+                },
+                apellido_paterno: {
+                    required: true,
+                },
+                apellido_materno: {
+                    required: true,
+                },
+                correo: {
+                    required: true,
+                    email: true,
+                },
+                contrasenia: {
+                    required: true,
+                    minlength: 8,
+                },
+                contrasenia_confirmation: {
+                    required: true,
+                    equalTo: '#contrasenia',
+                },
+            },
+            messages: {            
+                nombres: {
+                    required: 'Este campo es requerido.',
+                },
+                apellido_paterno: {
+                    required: 'Este campo es requerido.',
+                },
+                apellido_materno: {
+                    required: 'Este campo es requerido.',
+                },
+                correo: {
+                    required: 'Ingrese un correo electrónico.',
+                    email: 'Ingrese un correo electrónico válido.',
+                },
+                contrasenia: {
+                    required: 'Ingrese una contraseña.',
+                    minlength: 'La contraseña debe tener al menos {0} caracteres.',
+                },
+                contrasenia_confirmation: {
+                    required: 'Confirme su contraseña.',
+                    equalTo: 'Las contraseñas no coinciden.',
+                },
+            },
+            ignore: "",
+            highlight: function(element, errorClass) {
+                // $(element).addClass(errorClass);
+            },
+            unhighlight: function(element, errorClass) {
+                // $(element).removeClass(errorClass);
+            },
+            success: function(label) {
+                // label.closest('.form-group').removeClass('is-invalid').find(".text-danger").show();
+                // label.remove();
+            },
+            errorPlacement: function(error, element) {
+                var elem;
+                if (element.parent(".input-group").length > 0) {
+                    elem = element.parent(".input-group").parent();
+                } else {
+                    elem = element.parent();
+                }
+                elem.append(error.addClass('text-danger'));
+            }
+        });
+
+    });
+
+    $(document).on('click', '#btn-registro', function() {
+        if (!$('#form-registro').valid()) {
+            return false
+        };
+        $.ajax({
+            type: 'POST',
+            url: "{{url('registrar')}}",
+            data: $("#form-registro").serialize(),
+            async: false,
+            success: function(data) {              
+                window.location.href = "/login";         
+            },
+            error: function(xhr, status, error) {
+                var errors = xhr.responseJSON.errors;
+                $.each(errors, function(field, messages) {
+                    console.log(field);
+                    console.log(messages);
+                    var $input = $('[name="' + field + '"]');
+                    $input.addClass('is-invalid');
+                    var parentElement = $input.parent();
+                    if (parentElement.hasClass('input-group')) {
+                        parentElement = parentElement.parent();
+                    }
+                    parentElement.append($('<div>').addClass('invalid-feedback').html(messages));
+                });
+            }
+        })
+    })
+</script>
 
 @include('pages.footer-full')
 @endsection

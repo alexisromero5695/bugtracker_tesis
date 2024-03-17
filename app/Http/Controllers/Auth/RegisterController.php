@@ -67,7 +67,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+        dd('aqui');
         $staff = Staff::create([
             'username' => $data['username'],
             'first_name' => $data['first_name'],
