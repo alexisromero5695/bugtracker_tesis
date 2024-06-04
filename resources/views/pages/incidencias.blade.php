@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
 <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet" />
 <script src="https://unpkg.com/cropperjs"></script>
+<link rel="stylesheet" href="{{asset('libs/virtual-select/virtual-select.min.css')}}">
+<script src="{{asset('libs/virtual-select/virtual-select.js')}}"></script>
 
 <section id="modales">
     <div class="modal fade" data-backdrop="static" id="md-crear-incidencia">
@@ -34,12 +36,15 @@
                                 <div class="form-group">
                                     <label class="form-label" for="full-name">Tipo de incidencia <strong class="text-danger">*</strong> </label>
                                     <div class="form-control-wrap">
-                                        <select class="form-control form-select" id="tipo_incidencia" name="tipo_incidencia"></select>
+                                        <select class="form-control form-select" id="tipo" name="tipo">
+                                         
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-2">
+                            {{--
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="full-name">Sistema</label>
@@ -48,6 +53,7 @@
                                     </div>
                                 </div>
                             </div>
+                            --}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="full-name">Cliente</label>
@@ -56,8 +62,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-2">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="full-name">Prioridad</label>
@@ -69,6 +73,9 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- <div class="row mt-2">
+                      
+                        </div> -->
                         <hr>
                         <div class="form-group">
                             <label class="form-label" for="full-name">Titulo <strong class="text-danger">*</strong> </label>
@@ -109,7 +116,7 @@
                                         <div class="form-icon form-icon-left">
                                             <em class="icon ni ni-calendar-alt"></em>
                                         </div>
-                                        <input data-date-format="dd-mm-yyyy" id="fecha_vencimiento" name="fecha_vencimiento" type="text" class="form-control date-picker">
+                                        <input id="fecha_vencimiento" name="fecha_vencimiento" type="date" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +149,7 @@
                         </div>
                         <div class="card card-preview">
                             <div class="card-inner">
-                                <div class="w-100 d-flex justify-content-between align-items-center mb-5">
+                                <div class="w-100 d-flex justify-content-between align-items-center">
                                     @if($codigo_proyecto)
                                     <div class="d-flex align-items-center">
                                         <div class="user-avatar sq mr-1">
@@ -151,18 +158,99 @@
                                         <div>
                                             <h4 class="nk-block-title mb-0">{{$proyecto['nombre_proyecto']}} - {{$proyecto['codigo_proyecto']}}</h4>
                                             <span>Total incidencias:</span> <span id="contador_tabla">0</span>
-                                        </div>                    
+                                        </div>
                                     </div>
-                                  
                                     @else
                                     <div>
-                                        <h4 class="nk-block-title mb-0">Todas las incidencias</h4>
-                                        <span>Total incidencias:</span> <span id="contador_tabla">0</span>
+                                        <nav aria-label="breadcrumb">
+                                            <ol class="default-breadcrumb">
+                                                <li class="crumb">
+                                                    <div class="link"><em class="icon ni ni-users <?php echo $breadcrumb[count($breadcrumb) - 1]['icono_modulo'] ?>"></em></div>
+                                                </li>
+                                                @foreach($breadcrumb as $key => $item)
+                                                <li class="crumb <?php echo ($key == count($breadcrumb) - 1) ? "active" : "" ?>">
+                                                    <div class="link text-uppercase"><a href="javascript:void(0)">{{$item['nombre_modulo']}}</a></div>
+                                                </li>
+                                                @endforeach
+                                            </ol>
+                                        </nav>                                   
                                     </div>
-                                    
-                                    @endif
-                                    <button type="button" class="btn btn-primary" id="btn-md-crear-incidencia" data-toggle="modal">Nueva Incidencia</button>
+                                    @endif      
                                 </div>
+
+                                <h5 for="">Filtros de búsqueda</h5>
+                                <div style="background-color: #f5f6fa;padding: 0.5rem;" id="filtro_busqueda" class="mb-3 d-none">
+                                    <div style="padding: 0.5rem 0rem;" class="card-inner position-relative card-tools-toggle" data-select2-id="49">
+                                        <div class="card-title-group" data-select2-id="39">
+                                            <div class="card-tools" data-select2-id="38">
+                                                <div class="form-inline flex-nowrap gx-3 align-items-end" data-select2-id="37">
+                                                    <div class="form-wrap d-flex" style="gap: 1rem;" >                                                               
+                                                        <select class="w-100" multiple id="filtro_proyecto" name="native-select" placeholder="Proyecto" data-search="false" data-silent-initial-value-set="true">                  
+                                                            @foreach($proyectos as $item)
+                                                                <option value="{{$item->id_proyecto}}">{{$item->nombre_proyecto}}</option>
+                                                            @endforeach
+                                                        </select>                                                       
+
+                                                        <select multiple id="filtro_tipo" name="native-select" placeholder="Tipo" data-search="false" data-silent-initial-value-set="true">                                               
+                                                            @foreach($tipos_incidencia as $item)
+                                                                    <option value="{{$item->id_nombre_tipo}}">{{$item->nombre_tipo}}</option>
+                                                            @endforeach
+                                                        </select>
+
+                                                        <select multiple id="filtro_estado" name="native-select" placeholder="Estado" data-search="false" data-silent-initial-value-set="true">                                                            
+                                                                @foreach($estados as $item)
+                                                                    <option value="{{$item->id_estado}}">{{$item->nombre_estado}}</option>
+                                                                @endforeach
+                                                        </select>
+
+                                                        <select multiple id="filtro_persona_asignada" name="native-select" placeholder="Persona Asignada" data-search="false" data-silent-initial-value-set="true">                                                            
+                                                                @foreach($usuarios as $item)
+                                                                    <option value="{{$item->id_staff}}">{{$item->apellido_paterno_staff}} {{$item->apellido_materno_staff}} {{$item->nombre_staff}}</option>
+                                                                @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="btn-wrap">
+                                                            <span class="d-none d-md-block">
+                                                                <button class="btn btn-primary"><em class="icon ni ni-search"></em><span class="m-0">Buscar</span></button>
+                                                            </span>
+                                                            <span class="d-md-none">
+                                                                <button class="btn btn-dim btn-outline-light btn-icon disabled">
+                                                                    <em class="icon ni ni-arrow-right"></em>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-tools me-n1">
+                                                <ul class="btn-toolbar gx-1">
+                                                    <li><a href="#" class="btn btn-icon search-toggle toggle-search" data-target="search"><em class="icon ni ni-search"></em></a></li>
+                                                    <li class="btn-toolbar-sep"></li>
+                                                    <li>
+                                                        <div class="toggle-wrap"><a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-menu-right"></em></a>
+                                                            <div class="toggle-content" data-content="cardTools">
+                                                                <ul class="btn-toolbar gx-1">
+                                                                    <li class="toggle-close"><a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-arrow-left"></em></a></li>                                                      
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-search search-wrap" data-search="search">
+                                            <div class="card-body">
+                                                <div class="search-content"><a href="#" class="search-back btn btn-icon toggle-search" data-target="search"><em class="icon ni ni-arrow-left"></em></a>
+                                                    <input type="text" class="form-control border-transparent form-focus-none" placeholder="Buscar incidencias">
+                                                    <button class="search-submit btn btn-icon"><em class="icon ni ni-search"></em></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
                                 <section>
                                     <div class="d-flex justify-content-sm-between flex-column flex-sm-row">
                                         <div id="div_dataTables_length"></div>
@@ -172,6 +260,7 @@
                                         <table id="tbl-incidencia" style="font-size: 0.71rem!important;" class="table table-striped table-bordered w-100">
                                             <thead>
                                                 <tr class="nk-tb-item nk-tb-head">
+                                                    <th hidden></th>
                                                     <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Tipo</span></th>
                                                     <th class="nk-tb-col font-weight-normal text-center"><span class="sub-text">Clave</span></th>
                                                     <th class="nk-tb-col tb-col-mb font-weight-normal text-center"><span class="sub-text">Resumen</span></th>
@@ -205,13 +294,23 @@
     /* ====================================================================
                  FUNCIONES CREACION INCIDENCIA
     ==================================================================== */
+    function formatoSelectorCirculo(proyecto) {
+        if (!proyecto.id) {
+            return proyecto.text;
+        }
+        var $proyecto = $(           
+            '<span> <span style="font-size:1.2rem; color:'+proyecto.color+'">●</span> ' + proyecto.text + "</span>"
+        );
+        return $proyecto;
+    };
+
     function formatoSelector(proyecto) {
         if (!proyecto.id) {
             return proyecto.text;
         }
         var $proyecto = $(
             '<img  style="width:1em;" class="mr-1" src="files/' + proyecto.image + '">' +
-            '<span>' + proyecto.text + "</span>"
+            '<span></span>' + proyecto.text + "</span>"
         );
         return $proyecto;
     };
@@ -225,13 +324,14 @@
         var dataPrioridad = prioridades.map(function(item) {
             item['id'] = item.id_prioridad;
             item['text'] = item.nombre_prioridad;
+            item['color'] = item.color_prioridad;   
             item['image'] = `prioridad/${item.imagen_prioridad}`;
             return item;
         });
         $("#prioridad").select2({
             placeholder: "Seleccione",
-            templateResult: formatoSelector,
-            templateSelection: formatoSelector,
+            templateResult: formatoSelectorCirculo,
+            templateSelection: formatoSelectorCirculo,
             data: dataPrioridad,
             width: '100%',
             escapeMarkup: function(m) {
@@ -298,12 +398,12 @@
             },
             success: function(data) {
                 var data = data.map(function(item) {
-                    item['id'] = item.id_tipo_incidencia;
-                    item['text'] = item.nombre_tipo_incidencia;
-                    item['image'] = `tipo_incidencia/${item.imagen_tipo_incidencia}`;
+                    item['id'] = item.id_tipo;
+                    item['text'] = item.nombre_tipo;
+                    item['image'] = `tipo_incidencia/${item.imagen_tipo}`;
                     return item;
                 });
-                $("#tipo_incidencia").select2({
+                $("#tipo").select2({
                     placeholder: "Seleccione",
                     templateResult: formatoSelector,
                     templateSelection: formatoSelector,
@@ -318,6 +418,46 @@
                 console.error('Error: ' + error);
             }
         })
+
+
+        $("#cliente").select2({
+            width: "100%",
+            ajax: {
+                url: "{{url('listar-cliente-autocomplete')}}", //URL for searching companies
+                dataType: "json",
+                delay: 200,
+                data: function(params) {
+                    return {
+                        search: params.term, //params send to companies controller                     
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.nombre_cliente,
+                                id: item.id_cliente,                
+                            }
+                        })
+                    };
+                },
+                cache: true,
+                pagination: false // Desactivar la paginación
+            },
+            language: {
+                searching: function() {
+                    return "Buscando...";
+                },
+                noResults: function() {
+                    return "No se encontraron resultados";
+                },
+            },
+            placeholder: "Busque un cliente",
+            escapeMarkup: function(m) {
+                return m;
+            },
+            minimumInputLength: 0
+        });
 
 
 
@@ -375,9 +515,59 @@
     })
 
     $(document).ready(function() {
+        $("#filtro_busqueda").removeClass("d-none");
+   
+        VirtualSelect.init({ 
+            ele: '#filtro_proyecto' ,          
+            selectAllText: 'Seleccionar todo',
+            noOptionsText: 'No se encontraron resultados',
+            noSearchResultsTex: 'No se encontraron resultados',
+            searchPlaceholderText: 'Buscar...',
+            optionsSelectedText: 'Opciones seleccionadas',
+            optionSelectedText: 'Opción seleccionada',
+            allOptionsSelectedText: 'Proyectos',            
+            dropboxWidth: "500px",
+        });
+
+        VirtualSelect.init({ 
+            ele: '#filtro_tipo' ,
+            selectAllText: 'Seleccionar todo',
+            noOptionsText: 'No se encontraron resultados',
+            noSearchResultsTex: 'No se encontraron resultados',
+            searchPlaceholderText: 'Buscar...',
+            optionsSelectedText: 'Opciones seleccionadas',
+            optionSelectedText: 'Opción seleccionada',
+            allOptionsSelectedText: 'Tipos',            
+            dropboxWidth: "500px",
+        });
+        VirtualSelect.init({ 
+            ele: '#filtro_estado' ,
+            selectAllText: 'Seleccionar todo',
+            noOptionsText: 'No se encontraron resultados',
+            noSearchResultsTex: 'No se encontraron resultados',
+            searchPlaceholderText: 'Buscar...',
+            optionsSelectedText: 'Opciones seleccionadas',
+            optionSelectedText: 'Opción seleccionada',
+            allOptionsSelectedText: 'Estados',            
+            dropboxWidth: "500px",
+        });
+        VirtualSelect.init({ 
+            ele: '#filtro_persona_asignada' ,
+            selectAllText: 'Seleccionar todo',
+            noOptionsText: 'No se encontraron resultados',
+            noSearchResultsTex: 'No se encontraron resultados',
+            searchPlaceholderText: 'Buscar...',
+            optionsSelectedText: 'Opciones seleccionadas',
+            optionSelectedText: 'Opción seleccionada',
+            allOptionsSelectedText: 'Personas asignadas',            
+            dropboxWidth: "500px",
+        });
+
         $.validator.setDefaults({
             ignore: []
         });
+
+
 
         /* ------------------------------------------------------------------
              INICIALIZACION LIBRERIAS VALIDACION, DATATABLE, SUMMERNOTE
@@ -390,7 +580,7 @@
                 proyecto: {
                     required: true,
                 },
-                tipo_incidencia: {
+                tipo: {
                     required: true,
                 },
             },
@@ -401,7 +591,7 @@
                 proyecto: {
                     required: "Este campo es requerido",
                 },
-                tipo_incidencia: {
+                tipo: {
                     required: "Este campo es requerido",
                 },
             },
@@ -459,19 +649,34 @@
             },
             fnDrawCallback: function() {
                 let cantidad = this.api().page.info().recordsTotal;
-                $("#contador_tabla").text(`${cantidad}`);         
+                $("#contador_tabla").text(`${cantidad}`);
             },
             initComplete: (settings, json) => {
-                $('.dataTables_length').appendTo('#div_dataTables_length');
-                $("#tbl-incidencia_length").find('label').addClass('d-flex');
+                // $('.dataTables_length').appendTo('#div_dataTables_length');
+                // $("#tbl-incidencia_length").find('label').addClass('d-flex');
 
-                $('.dataTables_filter').appendTo('#div_dataTables_filter');
-                $("#tbl-incidencia_filter").find('label').addClass('d-flex');
+                // $('.dataTables_filter').appendTo('#div_dataTables_filter');
+                // $("#tbl-incidencia_filter").find('label').addClass('d-flex');
 
 
                 $('.dataTables_paginate').appendTo('#div_dataTables_paginate');
+                $('.custom-button').html('<button type="button" class="btn btn-primary" id="btn-md-crear-incidencia" data-toggle="modal"><span>Nueva Incidencia</span> <em class="icon ni ni-plus-c"></em></button>');
+
             },
-            "columns": [{
+
+            "searching": false, // Aquí se oculta la barra de búsqueda
+            dom: "<'row'<'col-sm-6'l><'col-sm-6 text-right'<'custom-button'>>>" + // Aquí defines tu propia estructura con el botón
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>", // Estructura predeterminada para la paginación e información
+       
+
+            "columns": [
+                {
+                    "data": "orden",
+                    'className': 'align-middle',
+                    'visible': false
+                },
+                {
                     "data": "tipo",
                     'className': 'align-middle',
                 },
@@ -535,6 +740,9 @@
             });
         }
     });
+
+
+    
 </script>
 @endsection
 

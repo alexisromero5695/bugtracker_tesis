@@ -18,6 +18,7 @@ class Proyecto extends Model
         'descripcion_proyecto',
         'fecha_inicio_proyecto',
         'fecha_fin_proyecto',
+        'fecha_creacion_proyecto',
         'vigente_proyecto'
     ];
     public $timestamps = false;

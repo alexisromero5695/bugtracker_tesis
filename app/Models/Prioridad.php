@@ -14,6 +14,8 @@ class Prioridad extends Model
         'nombre_prioridad',
         'orden_prioridad',
         'imagen_prioridad',        
+        'color_prioridad',
+        'color_texto_prioridad'
     ];
     public $timestamps = false;
 }

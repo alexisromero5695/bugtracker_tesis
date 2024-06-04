@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class TipoIncidencia extends Model
 {
     use HasFactory;
-    protected $table = 'tipo_incidencia';
-    protected $primaryKey = 'id_tipo_incidencia';
+    protected $table = 'tipo';
+    protected $primaryKey = 'id_tipo';
     protected $fillable = [
-        'nombre_tipo_incidencia',
-        'orden_tipo_incidencia',
-        'imagen_tipo_incidencia'
+        'nombre_tipo',
+        'orden_tipo',
+        'imagen_tipo',
+        'vigente_tipo'
     ];
     public $timestamps = false;
 }

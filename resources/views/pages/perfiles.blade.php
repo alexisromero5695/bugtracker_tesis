@@ -90,22 +90,39 @@
         <div class="nk-content-inner">
             <div class="nk-content-body">
                 <div class="components-preview  mx-auto">
-
-
                     <div class="nk-block nk-block-lg">
                         <div class="nk-block-head">
                             <div class="nk-block-head-content">
-
                             </div>
                         </div>
                         <div class="card card-preview">
                             <div class="card-inner">
 
-                                <div class="w-100 d-flex justify-content-between align-items-center mb-5">
-                                    <h4 class="nk-block-title mb-0">TODOS LOS PERFILES</h4>
-                                    <button type="button" class="btn btn-primary" id="btn-md-crear-perfil" data-toggle="modal">Nuevo Perfil</button>
+                                <div class="w-100">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="default-breadcrumb">
+                                            <li class="crumb">
+                                                <div class="link"><em class="icon ni ni-users <?php echo $breadcrumb[count($breadcrumb)-1]['icono_modulo'] ?>"></em></div>
+                                            </li>
+                                                @foreach($breadcrumb as $key => $item)
+                                                <li class="crumb <?php echo ($key == count($breadcrumb)-1) ? "active":"" ?>">
+                                                <div class="link text-uppercase"><a href="javascript:void(0)">{{$item['nombre_modulo']}}</a></div>
+                                            </li>
+                                                @endforeach                                              
+                                        </ol>
+                                    </nav>                                    
                                 </div>
 
+                                
+                                <h5 for="">Filtro de búsqueda</h5>
+                                <div style="background-color: #f5f6fa;padding: 0.5rem;" id="filtro_busqueda" class="px-1 d-none mb-4">
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control" placeholder="Buscar perfiles" aria-label="Buscar perfiles" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button"><em class="icon ni ni-search"></em><span class="m-0">Buscar</span></button>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <table id="tbl-perfil" class="table table-striped table-bordered w-100">
                                     <thead>
@@ -246,10 +263,10 @@
     var cropper;
     var image = document.getElementById('sample_image');
     $(document).ready(function() {
+        $("#filtro_busqueda").removeClass("d-none");
         $.validator.setDefaults({
             ignore: []
         });
-
         /* ------------------------------------------------------------------
              INICIALIZACION LIBRERIAS VALIDACION, DATATABLE, SUMMERNOTE
         ------------------------------------------------------------------ */
@@ -309,7 +326,14 @@
                 "url": "{{ url('tabla-perfiles')}}",
                 "type": 'GET',
             },
-
+            "searching": false, // Aquí se oculta la barra de búsqueda
+            dom: "<'row'<'col-sm-6'l><'col-sm-6 text-right'<'custom-button'>>>" + // Aquí defines tu propia estructura con el botón
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>", // Estructura predeterminada para la paginación e información
+            initComplete: function () { // Aquí puedes añadir tu botón personalizado
+                $('.custom-button').html('<button type="button" class="btn btn-primary" id="btn-md-crear-perfil" data-toggle="modal">Nuevo Perfil&nbsp<em class="icon ni ni-plus-c"></em></button></button>');
+            },
+            "pageLength": 10,
             "columns": [{
                     "data": "nombre",
                     'className': 'align-middle',

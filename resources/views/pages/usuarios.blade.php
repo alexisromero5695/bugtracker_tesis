@@ -99,13 +99,13 @@
                                     <select class="form-control" id="perfil" name="perfil" data-search="on">
                                         <option value=""></option>
                                         @foreach($perfiles as $item)
-                                            <option value="{{$item->id_perfil}}">{{$item->nombre_perfil}}</option>
+                                        <option value="{{$item->id_perfil}}">{{$item->nombre_perfil}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                    
+
                     </div>
 
                     <div class="row  mt-2">
@@ -180,17 +180,37 @@
                         <div class="card card-preview">
                             <div class="card-inner">
 
-                                <div class="w-100 d-flex justify-content-between align-items-center mb-5">
-                                    <h4 class="nk-block-title mb-0">TODOS LOS USUARIOS</h4>
-                                    <button type="button" class="btn btn-primary" id="btn-md-crear-usuario" data-toggle="modal">Nuevo Usuario</button>
+                                <div class="w-100">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="default-breadcrumb">
+                                            <li class="crumb">
+                                                <div class="link"><em class="icon ni ni-users <?php echo $breadcrumb[count($breadcrumb)-1]['icono_modulo'] ?>"></em></div>
+                                            </li>
+                                                @foreach($breadcrumb as $key => $item)
+                                                <li class="crumb <?php echo ($key == count($breadcrumb)-1) ? "active":"" ?>">
+                                                <div class="link text-uppercase"><a href="javascript:void(0)">{{$item['nombre_modulo']}}</a></div>
+                                            </li>
+                                                @endforeach                                              
+                                        </ol>
+                                    </nav>                                    
                                 </div>
 
+
+                                <h5 for="">Filtro de búsqueda</h5>
+                                <div style="background-color: #f5f6fa;padding: 0.5rem;" id="filtro_busqueda" class="px-1 d-none mb-4">
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control" placeholder="Buscar usuarios" aria-label="Buscar usuarios" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button"><em class="icon ni ni-search"></em><span class="m-0">Buscar</span></button>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <table id="tbl-usuario" class="table table-striped table-bordered w-100">
                                     <thead>
                                         <tr class="nk-tb-item nk-tb-head">
                                             <th class="nk-tb-col tb-col-lg font-weight-normal"><span class="sub-text"></span></th>
-                                            <th class="nk-tb-col font-weight-normal"><span class="sub-text">NRO. DOCUMENTO</span></th>
+                                            <th hidden class="nk-tb-col font-weight-normal"><span class="sub-text">NRO. DOCUMENTO</span></th>
                                             <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">NOMBRE</span></th>
                                             <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">APELLIDOS</span></th>
                                             <th class="nk-tb-col tb-col-mb font-weight-normal"><span class="sub-text">TELÉFONO</span></th>
@@ -215,7 +235,7 @@
     var show_modal_upload = 0;
     var upload_image = 0;
     var perfiles = <?php echo json_encode($perfiles) ?>
-   
+
     /* ------------------------------------------------------------------
                  FUNCIONES CREACION usuario
     ------------------------------------------------------------------ */
@@ -225,14 +245,14 @@
     $(document).on('click', '#btn-md-crear-usuario', function() {
         id_staff = 0;
         $('#contrasenia').prop('readonly', false);
-        $('#confirmar_contrasenia').prop('readonly', false); 
+        $('#confirmar_contrasenia').prop('readonly', false);
         ResetForm('form-crear-usuario');
         $("#titulo-crear-actualizar-usuario").html('Nuevo Usuario');
-      
+
         $("#md-crear-usuario").modal('show');
     })
 
-    $(document).on('click', '.btn-md-editar-usuario', function() {  
+    $(document).on('click', '.btn-md-editar-usuario', function() {
         ResetForm('form-crear-usuario');
         id_staff = $(this).data('id');
         $.ajax({
@@ -246,7 +266,7 @@
                 $("#nombre").val(data.nombre_staff);
                 $("#apellido_paterno").val(data.apellido_paterno_staff);
                 $("#apellido_materno").val(data.apellido_materno_staff);
-                $("#numero_documento").val(data.documento_staff);      
+                $("#numero_documento").val(data.documento_staff);
                 // $("#nombre").val(data.direccion_staff);
                 $("#telefono").val(data.telefono_staff);
                 $("#perfil").val(data.id_perfil);
@@ -255,7 +275,7 @@
         })
         $("#titulo-crear-actualizar-usuario").html('Editar Usuario');
         $('#contrasenia').prop('readonly', true);
-        $('#confirmar_contrasenia').prop('readonly', true); 
+        $('#confirmar_contrasenia').prop('readonly', true);
         $("#md-crear-usuario").modal('show');
     })
 
@@ -288,10 +308,10 @@
                 }, "success", 800);
                 $('#tbl-usuario').DataTable().ajax.reload();
                 $("#md-crear-usuario").modal('hide');
-            },           
+            },
             error: function(xhr, status, error) {
                 var errors = xhr.responseJSON.errors;
-                $.each(errors, function(field, messages) {            
+                $.each(errors, function(field, messages) {
                     var $input = $('[name="' + field + '"]');
                     $input.addClass('is-invalid');
                     var parentElement = $input.parent();
@@ -310,22 +330,81 @@
                 console.error('Error: ' + error);
             }
         })
-        
+
         $(btn).prop('disabled', false);
     });
 
 
+    $(document).on('click', '.btn-md-eliminar-usuario', function() {
+        // DevExpress.ui.dialog.confirm("¿Está seguro de que desea eliminar este usuario?", "Confirmación de eliminación", ["Sí", "No"]).then(function(result) {
+        //     if (result) {
+        //         // Código para eliminar el usuario
+        //     } else {
+        //         // Código para cancelar la eliminación del usuario
+        //     }
+        // });
+
+        id_staff = $(this).data("id");
+
+        var customDialog = DevExpress.ui.dialog.custom({
+            title: "Confirmación de eliminación",
+            message: "¿Está seguro de que desea eliminar este usuario?",
+            toolbarItems: [{
+                    text: "NO",
+                    onClick: function() {
+                        return false
+                    },
+                    focusStateEnabled: false
+                },
+                {
+                    text: "SI",
+                    onClick: function() {
+                        return true
+                    }
+                }
+            ],
+        });
+
+        setTimeout(function() {
+            $(".dx-dialog-button:last").addClass("dx-state-focused");
+        }, 100);
+
+        customDialog.show().done(function(dialogResult) {
+            if (dialogResult) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('eliminar-usuario')}}",
+                    async: false,
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        id_staff,
+                    },
+                    success: function(data) {
+                        $('#tbl-usuario').DataTable().ajax.reload();
+                        DevExpress.ui.notify({
+                            position: 'top',
+                            message: "Usuario eliminado exitosamente",
+                            width: 300,
+                            shading: false,
+                        }, "success", 800);
+                    }
+                })
+            }
+        });
+
+    })
 
     var cropper;
     var image = document.getElementById('sample_image');
-    $(document).ready(function() {        
+    $(document).ready(function() {
+        $("#filtro_busqueda").removeClass("d-none");
         $.validator.setDefaults({
             ignore: []
         });
 
         /* ------------------------------------------------------------------
              INICIALIZACION LIBRERIAS VALIDACION, DATATABLE, SUMMERNOTE
-        ------------------------------------------------------------------ */       
+        ------------------------------------------------------------------ */
 
         $("#form-crear-usuario").validate({
             ignore: ':hidden:not(:disabled),[readonly]', // No ignorar campos readonly
@@ -427,16 +506,24 @@
             "order": [
                 [0, 'asc']
             ], // 0 es el índice de la columna "orden"
+            "searching": false, // Aquí se oculta la barra de búsqueda
+            dom: "<'row'<'col-sm-6'l><'col-sm-6 text-right'<'custom-button'>>>" + // Aquí defines tu propia estructura con el botón
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>", // Estructura predeterminada para la paginación e información
+            initComplete: function () { // Aquí puedes añadir tu botón personalizado
+                $('.custom-button').html('<button type="button" class="btn btn-primary" id="btn-md-crear-usuario" data-toggle="modal">Nuevo Usuario&nbsp<em class="icon ni ni-plus-c"></em></button>');
+            },
             "pageLength": 10,
             "columns": [{
                     "data": "orden",
                     'visible': false,
-                    
+
                 },
                 {
                     "data": "documento",
                     'className': 'align-middle',
                     "orderable": false,
+                    'visible': false,
                 },
                 {
                     "data": 'nombre',
@@ -471,7 +558,7 @@
             ],
 
         });
-    
+
     });
 </script>
 @endsection

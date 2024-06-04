@@ -5,9 +5,9 @@
                 <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
             </div>
             <div class="nk-header-brand d-xl-none">
-                <a href="/inicio" class="logo-link">
-                <img class="logo-light logo-img" src="./images/logo-bugtracker-negativo-total.svg" srcset="./images/logo-bugtracker-negativo-total.svg 2x" alt="logo">
-                <img class="logo-dark logo-img" src="./images/logo-bugtracker-negativo.svg" srcset="./images/logo-bugtracker-negativo.svg 2x" alt="logo-dark">
+                <a href="/inicio/1" class="logo-link">
+                <img class="logo-light logo-img" src="/images/logo-bugtracker-negativo-total.svg" srcset="/images/logo-bugtracker-negativo-total.svg 2x" alt="logo">
+                <img class="logo-dark logo-img" src="/images/logo-bugtracker-negativo.svg" srcset="/images/logo-bugtracker-negativo.svg 2x" alt="logo-dark">
                 </a>
             </div><!-- .nk-header-brand -->
 

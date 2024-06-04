@@ -15,7 +15,8 @@ class Estado extends Model
         'orden_estado',
         'color_estado',
         'color_texto_estado',
-        'descripcion_estado'
+        'descripcion_estado',
+        'vigente_estado'
     ];
     public $timestamps = false;
 }

@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
 <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet" />
 <script src="https://unpkg.com/cropperjs"></script>
-
+<link rel="stylesheet" href="{{asset('libs/virtual-select/virtual-select.min.css')}}">
+<script src="{{asset('libs/virtual-select/virtual-select.js')}}"></script>
 <style>
     .image_area {
         position: relative;
@@ -69,7 +70,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Nuevo Proyecto</h5>
+                <h5 class="modal-title" id="titulo-crear-actualizar-proyecto"></h5>
                 <a href="#" class="close btn-close-modal" data-dismiss="modal" aria-label="Close">
                     <em class="icon ni ni-cross "></em>
                 </a>
@@ -77,6 +78,7 @@
             <div class="modal-body">
                 <form action="#" id="form-crear-proyecto" class="form-validate is-alter">
                     @csrf
+                    <input type="text" hidden id="id_proyecto" name="id_proyecto">
                     <div class="form-group">
                         <label class="form-label" for="full-name">Nombre <strong class="text-danger">*</strong> </label>
                         <div class="form-control-wrap">
@@ -114,7 +116,7 @@
                             <div class="form-icon form-icon-left">
                                 <em class="icon ni ni-calendar-alt"></em>
                             </div>
-                            <input data-date-format="dd-mm-yyyy" id="fecha_inicio" name="fecha_inicio" type="text" class="form-control date-picker">
+                            <input id="fecha_inicio" name="fecha_inicio" type="date" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -123,7 +125,7 @@
                             <div class="form-icon form-icon-left">
                                 <em class="icon ni ni-calendar-alt"></em>
                             </div>
-                            <input data-date-format="dd-mm-yyyy" id="fecha_fin" name="fecha_fin" type="text" class="form-control date-picker">
+                            <input id="fecha_fin" name="fecha_fin" type="date" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -233,9 +235,74 @@
                         <div class="card card-preview">
                             <div class="card-inner">
 
-                                <div class="w-100 d-flex justify-content-between align-items-center mb-5">
-                                    <h4 class="nk-block-title mb-0">TODOS LOS PROYECTOS</h4>
-                                    <button type="button" class="btn btn-primary" id="btn-md-crear-proyecto" data-toggle="modal">Nuevo Proyecto</button>
+                                <div class="w-100">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="default-breadcrumb">
+                                            <li class="crumb">
+                                                <div class="link"><em class="icon ni ni-users <?php echo $breadcrumb[count($breadcrumb)-1]['icono_modulo'] ?>"></em></div>
+                                            </li>
+                                                @foreach($breadcrumb as $key => $item)
+                                                <li class="crumb <?php echo ($key == count($breadcrumb)-1) ? "active":"" ?>">
+                                                <div class="link text-uppercase"><a href="javascript:void(0)">{{$item['nombre_modulo']}}</a></div>
+                                            </li>
+                                                @endforeach                                              
+                                        </ol>
+                                    </nav>                                    
+                                </div>
+
+
+                                <h5 for="">Filtros de búsqueda</h5>
+                                <div style="background-color: #f5f6fa;padding: 0.5rem;" id="filtro_busqueda" class="mb-4 d-none">
+                                    <div style="padding: 0.5rem 0rem;" class="card-inner position-relative card-tools-toggle" data-select2-id="49">
+                                        <div class="card-title-group" data-select2-id="39">
+                                            <div class="card-tools" data-select2-id="38">
+                                                <div class="form-inline flex-nowrap gx-3 align-items-end" data-select2-id="37">
+                                                    <div class="form-wrap d-flex" style="gap: 1rem;" >         
+                                                       
+                                                        <label class="text-nowrap fw-bolder" for="">Fecha inicio</label>
+                                                        <input type="date" name="" class="form-control" id="">
+                                                        <select multiple id="filtro_responsable" name="native-select" placeholder="Persona Asignada" data-search="false" data-silent-initial-value-set="true">                                                                                                                        
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="btn-wrap">
+                                                            <span class="d-none d-md-block">
+                                                                <button class="btn btn-primary"><em class="icon ni ni-search"></em><span class="m-0">Buscar</span></button>
+                                                            </span>
+                                                            <span class="d-md-none">
+                                                                <button class="btn btn-dim btn-outline-light btn-icon disabled">
+                                                                    <em class="icon ni ni-arrow-right"></em>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-tools me-n1">
+                                                <ul class="btn-toolbar gx-1">
+                                                    <li><a href="#" class="btn btn-icon search-toggle toggle-search" data-target="search"><em class="icon ni ni-search"></em></a></li>
+                                                    <li class="btn-toolbar-sep"></li>
+                                                    <li>
+                                                        <div class="toggle-wrap"><a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-menu-right"></em></a>
+                                                            <div class="toggle-content" data-content="cardTools">
+                                                                <ul class="btn-toolbar gx-1">
+                                                                    <li class="toggle-close"><a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-arrow-left"></em></a></li>                                                      
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-search search-wrap" data-search="search">
+                                            <div class="card-body">
+                                                <div class="search-content"><a href="#" class="search-back btn btn-icon toggle-search" data-target="search"><em class="icon ni ni-arrow-left"></em></a>
+                                                    <input type="text" class="form-control border-transparent form-focus-none" placeholder="Buscar proyectos">
+                                                    <button class="search-submit btn btn-icon"><em class="icon ni ni-search"></em></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
 
@@ -272,7 +339,7 @@
         upload_image = 0;
         show_modal_upload = 0;
         $("#avatar_image").attr('src', '/images/default/default-600.png');
-
+        $("#titulo-crear-actualizar-proyecto").html('Nuevo Proyecto');
         ResetForm('form-crear-proyecto');
         $.ajax({
             type: 'GET',
@@ -291,7 +358,6 @@
         })
         $("#md-crear-proyecto").modal('show');
     })
-
 
     $(document).on('click', '#btn-crear-proyecto', function() {
         if (!$('#form-crear-proyecto').valid()) {
@@ -335,10 +401,82 @@
     });
 
 
+    $(document).on('click', '.btn-md-editar-proyecto', function() {
+
+        ResetForm('form-crear-proyecto');
+        id_proyecto = $(this).data('id');
+
+        $.ajax({
+            type: 'GET',
+            url: "{{url('listar-staff')}}",
+            async: false,
+            success: function(data_staff) {
+                var html = `<option selected disabled>Seleccionar</option>`;
+                $.each(data_staff, function(i, item) {
+                    html += `<option value="${item.id_staff}">${item.nombre_staff} ${item.apellido_paterno_staff} ${item.apellido_materno_staff}</option>`;
+                })
+                $("#staff").html(html);
+            },
+            error: function(error) {
+                console.error('Error: ' + error);
+            }
+        })
+
+
+        $.ajax({
+            type: 'GET',
+            url: "{{url('traer-proyecto')}}",
+            async: false,
+            data: {
+                id_proyecto
+            },
+            success: function(data) {
+                $("#id_proyecto").val(data.id_proyecto);
+                $("#nombre").val(data.nombre_proyecto);
+                $("#codigo").val(data.codigo_proyecto);              
+                $("#fecha_inicio").val(data.fecha_inicio_proyecto);            
+                $("#fecha_fin").val(data.fecha_fin_proyecto);               
+                $("#descripcion").summernote('code', data.descripcion_proyecto);
+                if(data.id_responsable){
+                    $("#staff").val(data.id_responsable).change();    
+                    var select_responsable = $('#informante');
+                    var option_responsable = new Option(`${data.nombre_responsable} ${data.apellido_paterno_responsable} ${data.apellido_materno_responsable}`, data.id_responsable, true, true);             
+                        select_responsable.append(option_responsable);  
+                }
+
+                imagen_avatar = "/images/default/default-600.png";
+                if (data.imagen_avatar) {
+                    imagen_avatar ="/files/avatar/"+data.imagen_avatar;
+                }
+
+                $('#avatar_image').attr('src', imagen_avatar);
+                $('#avatar').val(data.id_avatar);
+            }
+        })       
+
+        $("#titulo-crear-actualizar-proyecto").html('Editar Usuario');
+        $("#md-crear-proyecto").modal('show');
+    })
+
 
     var cropper;
     var image = document.getElementById('sample_image');
     $(document).ready(function() {
+        $("#filtro_busqueda").removeClass("d-none");
+
+       
+        VirtualSelect.init({ 
+            ele: '#filtro_responsable' ,
+            selectAllText: 'Seleccionar todo',
+            noOptionsText: 'No se encontraron resultados',
+            noSearchResultsTex: 'No se encontraron resultados',
+            searchPlaceholderText: 'Buscar...',
+            optionsSelectedText: 'Opciones seleccionadas',
+            optionSelectedText: 'Opción seleccionada',
+            allOptionsSelectedText: 'Responsable',            
+            dropboxWidth: "500px",
+        });
+
         $.validator.setDefaults({
             ignore: []
         });
@@ -527,6 +665,13 @@
             "ajax": {
                 "url": "{{ url('tabla-proyectos')}}",
                 "type": 'GET',
+            },
+            "searching": false, // Aquí se oculta la barra de búsqueda
+            dom: "<'row'<'col-sm-6'l><'col-sm-6 text-right'<'custom-button'>>>" + // Aquí defines tu propia estructura con el botón
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>", // Estructura predeterminada para la paginación e información
+            initComplete: function () { // Aquí puedes añadir tu botón personalizado
+                $('.custom-button').html('<button type="button" class="btn btn-primary" id="btn-md-crear-proyecto" data-toggle="modal"><span>Nuevo Proyecto</span> <em class="icon ni ni-plus-c"></em></button>');
             },
 
             "columns": [{

@@ -146,7 +146,7 @@
             async: false,
             success: function(data) {
                 if (data == 'ok') {
-                    window.location.href = "/inicio";
+                    window.location.href = "/inicio/1";
                     localStorage.setItem("inicio_sesion", 1);
                 }
             },

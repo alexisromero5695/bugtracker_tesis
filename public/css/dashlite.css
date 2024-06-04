@@ -46598,3 +46598,52 @@ div.dataTables_wrapper div.dataTables_length .dark-mode select,
 }
 
 /*! END @iO */
+
+.border-main {
+  background-color: #f5f6fa;
+  border: 2px solid #000 !important;
+}
+
+
+
+
+.btn-green {
+  color: #fff;
+  background-color: #1d6f42;
+  border-color: #1d6f42;
+}
+
+.btn-green:hover {
+  color: #fff;
+  background-color: #154f2f;
+  border-color: #18b389;
+}
+
+.btn-green:focus,
+.btn-green.focus {
+  color: #fff;
+  background-color: #154f2f;
+  border-color: #18b389;
+  box-shadow: 0 0 0 0.2rem rgba(29, 111, 66, 0.5);
+}
+
+.btn-green.disabled,
+.btn-green:disabled {
+  color: #fff;
+  background-color: #1d6f42;
+  border-color: #1d6f42;
+}
+
+.btn-green:not(:disabled):not(.disabled):active,
+.btn-green:not(:disabled):not(.disabled).active,
+.show>.btn-green.dropdown-toggle {
+  color: #fff;
+  background-color: #154f2f;
+  border-color: #16a881;
+}
+
+.btn-green:not(:disabled):not(.disabled):active:focus,
+.btn-green:not(:disabled):not(.disabled).active:focus,
+.show>.btn-green.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(29, 111, 66, 0.5);
+}

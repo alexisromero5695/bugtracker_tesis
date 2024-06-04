@@ -13,12 +13,12 @@ use Carbon\Carbon;
 
 class PerfilesController extends Controller
 {
-    public function index(Request $request)
+    public function index($id_modulo)
     {
         $modulos = json_decode(Helper::CargarMenu());
         $modulos = $modulos->menu;
-
-        return view('pages.perfiles', compact('modulos'));
+        $breadcrumb =Helper::breadcrumb($id_modulo, Modulo::where('vigente_modulo',1)->get());      
+        return view('pages.perfiles', compact('modulos','breadcrumb'));
     }
 
     public static function ObtenerPadre($id_submodulo)

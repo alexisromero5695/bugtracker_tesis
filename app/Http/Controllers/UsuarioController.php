@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
+use App\Models\Modulo;
 use App\Models\Perfil;
 use App\Models\PerfilModulo;
 use App\Models\PerfilModuloUsuario;
@@ -13,10 +15,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UsuarioController extends Controller
 {
-    public function index(Request $request)
+    public function index($id_modulo)
     {
         $perfiles = Perfil::where('vigente_perfil', 1)->get();
-        return view('pages.usuarios', compact('perfiles'));
+        $breadcrumb =Helper::breadcrumb($id_modulo, Modulo::where('vigente_modulo',1)->get());      
+        return view('pages.usuarios', compact('perfiles','breadcrumb'));
     }
 
     public function tabla()
@@ -47,7 +50,7 @@ class UsuarioController extends Controller
                                     </a>
                                     <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
                                         <a data-id='" . $data['id_staff'] . "' href='javascript:void(0)' class='dropdown-item btn-md-editar-usuario' href='#'><em class='icon ni ni-pen'></em> Editar</a>                                    
-                                        <a data-id='" . $data['id_staff'] . "' href='javascript:void(0)' class='dropdown-item btn-md-eliminar-usuario' href='#'><em class='icon ni ni-pen'></em> Eliminar</a>                                    
+                                        <a data-id='" . $data['id_staff'] . "' href='javascript:void(0)' class='dropdown-item btn-md-eliminar-usuario' href='#'><em class='icon ni ni-trash'></em> Eliminar</a>                                     
 
                                     </div>
                                    
@@ -204,7 +207,7 @@ class UsuarioController extends Controller
 
     public function traer(Request $request)
     {
-           $staff = Staff::join('usuario', 'usuario.id_staff', 'staff.id_staff')
+        $staff = Staff::join('usuario', 'usuario.id_staff', 'staff.id_staff')
             ->join('perfil', 'perfil.id_perfil', 'usuario.id_perfil')
             ->where('staff.id_staff', $request->id_staff)
             ->first();
@@ -217,7 +220,15 @@ class UsuarioController extends Controller
             'direccion_staff' => $staff['direccion_staff'],
             'telefono_staff' => $staff['telefono_staff'],
             'id_perfil' => $staff['id_perfil'],
-            'correo_usuario' => $staff['correo_usuario'],            
+            'correo_usuario' => $staff['correo_usuario'],
         ]);
+    }
+
+    public function eliminar(Request $request)
+    {
+        $id_usuario = Usuario::where('id_staff', $request->id_staff)->value('id_usuario');
+        Staff::where('staff.id_staff', $request->id_staff)->delete();
+        PerfilModuloUsuario::where('id_usuario', $id_usuario)->delete();
+        Usuario::where('id_staff', $request->id_staff)->delete();
     }
 }
